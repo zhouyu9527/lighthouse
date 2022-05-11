@@ -10,6 +10,7 @@ const frConfig = require('./default-config.js');
 const unsupportedAuditIds = [
   'experimental-interaction-to-next-paint',
   'uses-responsive-images-snapshot',
+  'work-during-interaction',
 ];
 
 const audits = frConfig.audits?.filter(audit =>

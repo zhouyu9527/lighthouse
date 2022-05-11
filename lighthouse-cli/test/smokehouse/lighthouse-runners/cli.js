@@ -67,8 +67,8 @@ async function internalRun(url, tmpPath, configJson, options) {
     '--quiet',
   ];
 
-  if (useFraggleRock) {
-    args.push('--fraggle-rock');
+  if (!useFraggleRock) {
+    args.push('--legacy-navigation');
   }
 
   // Config can be optionally provided.

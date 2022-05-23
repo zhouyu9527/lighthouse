@@ -38,14 +38,7 @@ const fraggleRock = require('./fraggle-rock/api.js');
  * @return {Promise<LH.RunnerResult|undefined>}
  */
 async function lighthouse(url, flags = {}, configJSON, page) {
-  const configContext = {
-    configPath: flags.configPath,
-    settingsOverrides: flags,
-    logLevel: flags.logLevel,
-    hostname: flags.hostname,
-    port: flags.port,
-  };
-  return fraggleRock.navigation(url, {page, config: configJSON, configContext});
+  return fraggleRock.navigation(url, {page, config: configJSON, flags});
 }
 
 /**

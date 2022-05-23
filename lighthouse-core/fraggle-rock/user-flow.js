@@ -63,24 +63,22 @@ class UserFlow {
    */
   _getNextNavigationOptions(stepOptions) {
     const options = {...this.options, ...stepOptions};
-    const configContext = {...options.configContext};
-    const settingsOverrides = {...configContext.settingsOverrides};
+    const flags = {...options.flags};
 
-    if (configContext.skipAboutBlank === undefined) {
-      configContext.skipAboutBlank = true;
+    if (flags.skipAboutBlank === undefined) {
+      flags.skipAboutBlank = true;
     }
 
     // On repeat navigations, we want to disable storage reset by default (i.e. it's not a cold load).
     const isSubsequentNavigation = this._gatherSteps
       .some(step => step.artifacts.GatherContext.gatherMode === 'navigation');
     if (isSubsequentNavigation) {
-      if (settingsOverrides.disableStorageReset === undefined) {
-        settingsOverrides.disableStorageReset = true;
+      if (flags.disableStorageReset === undefined) {
+        flags.disableStorageReset = true;
       }
     }
 
-    configContext.settingsOverrides = settingsOverrides;
-    options.configContext = configContext;
+    options.flags = flags;
 
     return options;
   }
@@ -96,7 +94,7 @@ class UserFlow {
       artifacts: gatherResult.artifacts,
       name: providedName || this._getDefaultStepName(gatherResult.artifacts),
       config: options.config,
-      configContext: options.configContext,
+      flags: options.flags,
     };
     this._gatherSteps.push(gatherStep);
     this._gatherStepRunnerOptions.set(gatherStep, gatherResult.runnerOptions);
@@ -196,7 +194,7 @@ async function auditGatherSteps(gatherSteps, options) {
   /** @type {LH.FlowResult['steps']} */
   const steps = [];
   for (const gatherStep of gatherSteps) {
-    const {artifacts, name, configContext} = gatherStep;
+    const {artifacts, name, flags} = gatherStep;
 
     let runnerOptions = options.gatherStepRunnerOptions?.get(gatherStep);
 
@@ -205,7 +203,7 @@ async function auditGatherSteps(gatherSteps, options) {
       // Step specific configs take precedence over a config for the entire flow.
       const configJson = gatherStep.config || options.config;
       const {gatherMode} = artifacts.GatherContext;
-      const {config} = initializeConfig(configJson, {...configContext, gatherMode});
+      const {config} = initializeConfig(configJson, flags || {}, gatherMode);
       runnerOptions = {
         config,
         computedCache: new Map(),

@@ -30,8 +30,6 @@ const {
 } = require('../../config/config-helpers.js');
 const defaultConfigPath = path.join(__dirname, './default-config.js');
 
-/** @typedef {LH.Config.FRContext & {gatherMode: LH.Gatherer.GatherMode}} ConfigContext */
-
 /**
  * @param {LH.Config.Json|undefined} configJSON
  * @param {{configPath?: string}} context
@@ -165,10 +163,10 @@ function resolveArtifactsToDefns(artifacts, configDir) {
  * Overrides the settings that may not apply to the chosen gather mode.
  *
  * @param {LH.Config.Settings} settings
- * @param {ConfigContext} context
+ * @param {LH.Gatherer.GatherMode} gatherMode
  */
-function overrideSettingsForGatherMode(settings, context) {
-  if (context.gatherMode === 'timespan') {
+function overrideSettingsForGatherMode(settings, gatherMode) {
+  if (gatherMode === 'timespan') {
     if (settings.throttlingMethod === 'simulate') {
       settings.throttlingMethod = 'devtools';
     }
@@ -241,20 +239,21 @@ function resolveNavigationsToDefns(navigations, artifactDefns, settings) {
 
 /**
  * @param {LH.Config.Json|undefined} configJSON
- * @param {ConfigContext} context
+ * @param {LH.Flags} flags
+ * @param {LH.Gatherer.GatherMode} gatherMode
  * @return {{config: LH.Config.FRConfig, warnings: string[]}}
  */
-function initializeConfig(configJSON, context) {
+function initializeConfig(configJSON, flags, gatherMode) {
   const status = {msg: 'Initialize config', id: 'lh:config'};
   log.time(status, 'verbose');
 
-  let {configWorkingCopy, configDir} = resolveWorkingCopy(configJSON, context); // eslint-disable-line prefer-const
+  let {configWorkingCopy, configDir} = resolveWorkingCopy(configJSON, flags);
 
   configWorkingCopy = resolveExtensions(configWorkingCopy);
-  configWorkingCopy = mergePlugins(configWorkingCopy, configDir, context.settingsOverrides);
+  configWorkingCopy = mergePlugins(configWorkingCopy, configDir, flags);
 
-  const settings = resolveSettings(configWorkingCopy.settings || {}, context.settingsOverrides);
-  overrideSettingsForGatherMode(settings, context);
+  const settings = resolveSettings(configWorkingCopy.settings || {}, flags);
+  overrideSettingsForGatherMode(settings, gatherMode);
 
   const artifacts = resolveArtifactsToDefns(configWorkingCopy.artifacts, configDir);
   const navigations = resolveNavigationsToDefns(configWorkingCopy.navigations, artifacts, settings);
@@ -271,7 +270,7 @@ function initializeConfig(configJSON, context) {
 
   const {warnings} = assertValidConfig(config);
 
-  config = filterConfigByGatherMode(config, context.gatherMode);
+  config = filterConfigByGatherMode(config, gatherMode);
   config = filterConfigByExplicitFilters(config, settings);
 
   log.timeEnd(status);

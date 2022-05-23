@@ -303,17 +303,17 @@ async function _cleanup({requestedUrl, driver, config}) {
 
 /**
  * @param {LH.NavigationRequestor|undefined} requestor
- * @param {{page?: LH.Puppeteer.Page, config?: LH.Config.Json, configContext?: LH.Config.FRContext}} options
+ * @param {{page?: LH.Puppeteer.Page, config?: LH.Config.Json, flags?: LH.Flags}} options
  * @return {Promise<LH.Gatherer.FRGatherResult>}
  */
 async function navigationGather(requestor, options) {
-  const {configContext = {}} = options;
-  log.setLevel(configContext.logLevel || 'error');
+  const {flags = {}} = options;
+  log.setLevel(flags.logLevel || 'error');
 
-  const {config} = initializeConfig(options.config, {...configContext, gatherMode: 'navigation'});
+  const {config} = initializeConfig(options.config, flags, 'navigation');
   const computedCache = new Map();
   const internalOptions = {
-    skipAboutBlank: configContext.skipAboutBlank,
+    skipAboutBlank: flags.skipAboutBlank,
   };
 
   // We can't trigger the navigation through user interaction if we reset the page before starting.
@@ -330,7 +330,7 @@ async function navigationGather(requestor, options) {
       // For navigation mode, we shouldn't connect to a browser in audit mode,
       // therefore we connect to the browser in the gatherFn callback.
       if (!page) {
-        const {hostname = DEFAULT_HOSTNAME, port = DEFAULT_PORT} = configContext;
+        const {hostname = DEFAULT_HOSTNAME, port = DEFAULT_PORT} = flags;
         const browser = await puppeteer.connect({browserURL: `http://${hostname}:${port}`});
         page = await browser.newPage();
       }

@@ -118,6 +118,8 @@ export interface Flags extends SharedFlagsSettings {
   configPath?: string;
   /** Run the specified plugins. */
   plugins?: string[];
+  /** If set to true, will skip the initial navigation to about:blank. This option is ignored when using the legacy navigation runner. */
+  skipAboutBlank?: boolean;
 }
 
 /**

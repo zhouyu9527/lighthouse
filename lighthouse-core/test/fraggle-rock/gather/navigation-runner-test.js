@@ -108,7 +108,7 @@ describe('NavigationRunner', () => {
     requestedUrl = 'http://example.com';
     requestor = requestedUrl;
     mockRunner.reset();
-    config = initializeConfig(undefined, {gatherMode: 'navigation'}).config;
+    config = initializeConfig(undefined, {}, 'navigation').config;
     navigation = createNavigation().navigation;
     computedCache = new Map();
     baseArtifacts = createMockBaseArtifacts();
@@ -197,7 +197,8 @@ describe('NavigationRunner', () => {
             {id: 'fourth', artifacts: ['AnchorElements']},
           ],
         },
-        {gatherMode: 'navigation'}
+        {},
+        'navigation'
       ).config;
 
       await run();
@@ -216,7 +217,8 @@ describe('NavigationRunner', () => {
             {id: 'default', artifacts: ['FontSize']},
           ],
         },
-        {gatherMode: 'navigation'}
+        {},
+        'navigation'
       ).config;
       mocks.navigationMock.gotoURL.mockReturnValue({
         requestedUrl,
@@ -243,7 +245,8 @@ describe('NavigationRunner', () => {
             {id: 'second', artifacts: ['ConsoleMessages']},
           ],
         },
-        {gatherMode: 'navigation'}
+        {},
+        'navigation'
       ).config;
 
       // Both gatherers will error in these test conditions, but artifact errors
@@ -263,7 +266,8 @@ describe('NavigationRunner', () => {
             {id: 'second', artifacts: ['ConsoleMessages']},
           ],
         },
-        {gatherMode: 'navigation'}
+        {},
+        'navigation'
       ).config;
 
       // Ensure the first real page load fails.
@@ -573,24 +577,23 @@ describe('NavigationRunner', () => {
     });
 
     it('should initialize config', async () => {
-      const settingsOverrides = {
+      const flags = {
         formFactor: /** @type {const} */ ('desktop'),
         maxWaitForLoad: 1234,
         screenEmulation: {mobile: false},
       };
 
-      const configContext = {settingsOverrides};
       await runner.navigationGather(
         'http://example.com',
         {
           page: mockDriver._page.asPage(),
-          configContext,
+          flags,
         }
       );
 
       expect(mockRunner.gather.mock.calls[0][1]).toMatchObject({
         config: {
-          settings: settingsOverrides,
+          settings: flags,
         },
       });
     });

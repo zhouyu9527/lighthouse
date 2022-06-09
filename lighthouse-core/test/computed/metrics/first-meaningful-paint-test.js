@@ -3,19 +3,19 @@
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
-'use strict';
 
-/* eslint-env jest */
-
-import FirstMeaningfulPaint from '../../../computed/metrics/first-meaningful-paint.js';
 import {strict as assert} from 'assert';
+
+import {readJson} from '../../../../root.js';
+import FirstMeaningfulPaint from '../../../computed/metrics/first-meaningful-paint.js';
 import {getURLArtifactFromDevtoolsLog} from '../../test-utils.js';
-import pwaTrace from '../../fixtures/traces/progressive-app-m60.json';
-import pwaDevtoolsLog from '../../fixtures/traces/progressive-app-m60.devtools.log.json';
-import badNavStartTrace from '../../fixtures/traces/bad-nav-start-ts.json';
-import lateTracingStartedTrace from '../../fixtures/traces/tracingstarted-after-navstart.json';
-import preactTrace from '../../fixtures/traces/preactjs.com_ts_of_undefined.json';
-import noFMPtrace from '../../fixtures/traces/no_fmp_event.json';
+
+const pwaTrace = readJson('../../fixtures/traces/progressive-app-m60.json', import.meta);
+const pwaDevtoolsLog = readJson('../../fixtures/traces/progressive-app-m60.devtools.log.json', import.meta);
+const badNavStartTrace = readJson('../../fixtures/traces/bad-nav-start-ts.json', import.meta);
+const lateTracingStartedTrace = readJson('../../fixtures/traces/tracingstarted-after-navstart.json', import.meta);
+const preactTrace = readJson('../../fixtures/traces/preactjs.com_ts_of_undefined.json', import.meta);
+const noFMPtrace = readJson('../../fixtures/traces/no_fmp_event.json', import.meta);
 
 describe('Metrics: FMP', () => {
   const gatherContext = {gatherMode: 'navigation'};

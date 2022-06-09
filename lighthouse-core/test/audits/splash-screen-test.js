@@ -3,13 +3,15 @@
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
-'use strict';
 
 import {strict as assert} from 'assert';
+
+import {readJson} from '../../../root.js';
 import SplashScreenAudit from '../../audits/splash-screen.js';
 import manifestParser from '../../lib/manifest-parser.js';
-import manifest from '../fixtures/manifest.json';
-import manifestDirtyJpg from '../fixtures/manifest-dirty-jpg.json';
+
+const manifest = readJson('../fixtures/manifest.json', import.meta);
+const manifestDirtyJpg = readJson('../fixtures/manifest-dirty-jpg.json', import.meta);
 
 const manifestSrc = JSON.stringify(manifest);
 const manifestDirtyJpgSrc = JSON.stringify(manifestDirtyJpg);
@@ -32,8 +34,6 @@ function generateMockAuditContext() {
     computedCache: new Map(),
   };
 }
-
-/* eslint-env jest */
 describe('PWA: splash screen audit', () => {
   describe('basics', () => {
     it('fails if page had no manifest', () => {

@@ -3,16 +3,14 @@
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
-'use strict';
 
-/* eslint-env jest */
+import {strict as assert} from 'assert';
 
 import {jest} from '@jest/globals';
+
 import Gatherer from '../../gather/gatherers/gatherer.js';
 // import GathererRunner_ from '../../gather/gather-runner.js';
-import {strict as assert} from 'assert';
 // import Config from '../../config/config.js';
-import unresolvedPerfLog from './../fixtures/unresolved-perflog.json';
 import LHError from '../../lib/lh-error.js';
 import networkRecordsToDevtoolsLog from '../network-records-to-devtools-log.js';
 // import Driver from '../../gather/driver.js';
@@ -27,6 +25,9 @@ import {
 } from '../test-utils.js';
 import fakeDriver from './fake-driver.js';
 import {createCommonjsRefs} from '../../scripts/esm-utils.js';
+import {readJson} from '../../../root.js';
+
+const unresolvedPerfLog = readJson('./../fixtures/unresolved-perflog.json', import.meta);
 
 const {require} = createCommonjsRefs(import.meta);
 

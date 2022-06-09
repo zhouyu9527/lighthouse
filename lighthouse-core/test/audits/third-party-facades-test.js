@@ -3,17 +3,18 @@
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an AS IS' BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
-'use strict';
 
 import ThirdPartyFacades from '../../audits/third-party-facades.js';
 import networkRecordsToDevtoolsLog from '../network-records-to-devtools-log.js';
 import createTestTrace from '../create-test-trace.js';
-import pwaTrace from '../fixtures/traces/progressive-app-m60.json';
-import pwaDevtoolsLog from '../fixtures/traces/progressive-app-m60.devtools.log.json';
-import videoEmbedsTrace from '../fixtures/traces/video-embeds-m84.json';
-import videoEmbedsDevtolsLog from '../fixtures/traces/video-embeds-m84.devtools.log.json';
-import noThirdPartyTrace from '../fixtures/traces/no-tracingstarted-m74.json';
 import {getURLArtifactFromDevtoolsLog} from '../test-utils.js';
+import {readJson} from '../../../root.js';
+
+const pwaTrace = readJson('../fixtures/traces/progressive-app-m60.json', import.meta);
+const pwaDevtoolsLog = readJson('../fixtures/traces/progressive-app-m60.devtools.log.json', import.meta);
+const videoEmbedsTrace = readJson('../fixtures/traces/video-embeds-m84.json', import.meta);
+const videoEmbedsDevtolsLog = readJson('../fixtures/traces/video-embeds-m84.devtools.log.json', import.meta);
+const noThirdPartyTrace = readJson('../fixtures/traces/no-tracingstarted-m74.json', import.meta);
 
 function intercomProductUrl(id) {
   return `https://widget.intercom.io/widget/${id}`;
@@ -30,8 +31,6 @@ function youtubeProductUrl(id) {
 function youtubeResourceUrl(id) {
   return `https://i.ytimg.com/${id}/maxresdefault.jpg`;
 }
-
-/* eslint-env jest */
 describe('Third party facades audit', () => {
   it('correctly identifies a third party product with facade alternative', async () => {
     const artifacts = {

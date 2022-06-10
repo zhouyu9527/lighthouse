@@ -310,7 +310,7 @@ async function navigationGather(requestor, options) {
   const {flags = {}} = options;
   log.setLevel(flags.logLevel || 'error');
 
-  const {config} = await initializeConfig(options.config, flags, 'navigation');
+  const {config} = await initializeConfig('navigation', options.config, flags);
   const computedCache = new Map();
   const internalOptions = {
     skipAboutBlank: flags.skipAboutBlank,

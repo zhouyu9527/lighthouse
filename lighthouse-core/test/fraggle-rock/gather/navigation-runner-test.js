@@ -108,7 +108,7 @@ describe('NavigationRunner', () => {
     requestedUrl = 'http://example.com';
     requestor = requestedUrl;
     mockRunner.reset();
-    config = (await initializeConfig(undefined, {}, 'navigation')).config;
+    config = (await initializeConfig('navigation')).config;
     navigation = createNavigation().navigation;
     computedCache = new Map();
     baseArtifacts = createMockBaseArtifacts();
@@ -188,6 +188,7 @@ describe('NavigationRunner', () => {
 
     it('should navigate as many times as there are navigations', async () => {
       config = (await initializeConfig(
+        'navigation',
         {
           ...config,
           navigations: [
@@ -196,9 +197,7 @@ describe('NavigationRunner', () => {
             {id: 'third', artifacts: ['ViewportDimensions']},
             {id: 'fourth', artifacts: ['AnchorElements']},
           ],
-        },
-        {},
-        'navigation'
+        }
       )).config;
 
       await run();
@@ -211,14 +210,13 @@ describe('NavigationRunner', () => {
       requestedUrl = 'https://backfill.example.com';
       requestor = () => {};
       config = (await initializeConfig(
+        'navigation',
         {
           ...config,
           navigations: [
             {id: 'default', artifacts: ['FontSize']},
           ],
-        },
-        {},
-        'navigation'
+        }
       )).config;
       mocks.navigationMock.gotoURL.mockReturnValue({
         requestedUrl,
@@ -238,15 +236,14 @@ describe('NavigationRunner', () => {
 
     it('should merge artifacts between navigations', async () => {
       config = (await initializeConfig(
+        'navigation',
         {
           ...config,
           navigations: [
             {id: 'default', artifacts: ['FontSize']},
             {id: 'second', artifacts: ['ConsoleMessages']},
           ],
-        },
-        {},
-        'navigation'
+        }
       )).config;
 
       // Both gatherers will error in these test conditions, but artifact errors
@@ -259,15 +256,14 @@ describe('NavigationRunner', () => {
 
     it('should retain PageLoadError and associated warnings', async () => {
       config = (await initializeConfig(
+        'navigation',
         {
           ...config,
           navigations: [
             {id: 'default', loadFailureMode: 'fatal', artifacts: ['FontSize']},
             {id: 'second', artifacts: ['ConsoleMessages']},
           ],
-        },
-        {},
-        'navigation'
+        }
       )).config;
 
       // Ensure the first real page load fails.

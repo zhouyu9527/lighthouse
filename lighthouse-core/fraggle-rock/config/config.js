@@ -239,12 +239,12 @@ function resolveNavigationsToDefns(navigations, artifactDefns, settings) {
 }
 
 /**
- * @param {LH.Config.Json|undefined} configJSON
- * @param {LH.Flags} flags
  * @param {LH.Gatherer.GatherMode} gatherMode
+ * @param {LH.Config.Json=} configJSON
+ * @param {LH.Flags=} flags
  * @return {Promise<{config: LH.Config.FRConfig, warnings: string[]}>}
  */
-async function initializeConfig(configJSON, flags, gatherMode) {
+async function initializeConfig(gatherMode, configJSON, flags = {}) {
   const status = {msg: 'Initialize config', id: 'lh:config'};
   log.time(status, 'verbose');
 

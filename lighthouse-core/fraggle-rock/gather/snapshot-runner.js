@@ -24,7 +24,7 @@ async function snapshotGather(options) {
   const {flags = {}} = options;
   log.setLevel(flags.logLevel || 'error');
 
-  const {config} = initializeConfig(options.config, flags, 'snapshot');
+  const {config} = await initializeConfig(options.config, flags, 'snapshot');
   const driver = new Driver(options.page);
   await driver.connect();
 

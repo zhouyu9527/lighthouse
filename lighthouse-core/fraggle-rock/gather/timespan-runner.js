@@ -25,7 +25,7 @@ async function startTimespanGather(options) {
   const {flags = {}} = options;
   log.setLevel(flags.logLevel || 'error');
 
-  const {config} = initializeConfig(options.config, flags, 'timespan');
+  const {config} = await initializeConfig(options.config, flags, 'timespan');
   const driver = new Driver(options.page);
   await driver.connect();
 

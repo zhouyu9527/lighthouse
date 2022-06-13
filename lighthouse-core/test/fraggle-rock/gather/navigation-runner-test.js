@@ -4,7 +4,6 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-
 import {jest} from '@jest/globals';
 
 import {
@@ -105,11 +104,11 @@ describe('NavigationRunner', () => {
     };
   }
 
-  beforeEach(() => {
+  beforeEach(async () => {
     requestedUrl = 'http://example.com';
     requestor = requestedUrl;
     mockRunner.reset();
-    config = initializeConfig(undefined, {gatherMode: 'navigation'}).config;
+    config = (await initializeConfig(undefined, {gatherMode: 'navigation'})).config;
     navigation = createNavigation().navigation;
     computedCache = new Map();
     baseArtifacts = createMockBaseArtifacts();
@@ -188,7 +187,7 @@ describe('NavigationRunner', () => {
     });
 
     it('should navigate as many times as there are navigations', async () => {
-      config = initializeConfig(
+      config = (await initializeConfig(
         {
           ...config,
           navigations: [
@@ -199,7 +198,7 @@ describe('NavigationRunner', () => {
           ],
         },
         {gatherMode: 'navigation'}
-      ).config;
+      )).config;
 
       await run();
       const navigations = mocks.navigationMock.gotoURL.mock.calls;
@@ -210,7 +209,7 @@ describe('NavigationRunner', () => {
     it('should backfill requested URL using a callback requestor', async () => {
       requestedUrl = 'https://backfill.example.com';
       requestor = () => {};
-      config = initializeConfig(
+      config = (await initializeConfig(
         {
           ...config,
           navigations: [
@@ -218,7 +217,7 @@ describe('NavigationRunner', () => {
           ],
         },
         {gatherMode: 'navigation'}
-      ).config;
+      )).config;
       mocks.navigationMock.gotoURL.mockReturnValue({
         requestedUrl,
         mainDocumentUrl: requestedUrl,
@@ -236,7 +235,7 @@ describe('NavigationRunner', () => {
     });
 
     it('should merge artifacts between navigations', async () => {
-      config = initializeConfig(
+      config = (await initializeConfig(
         {
           ...config,
           navigations: [
@@ -245,7 +244,7 @@ describe('NavigationRunner', () => {
           ],
         },
         {gatherMode: 'navigation'}
-      ).config;
+      )).config;
 
       // Both gatherers will error in these test conditions, but artifact errors
       // will be merged into single `artifacts` object.
@@ -256,7 +255,7 @@ describe('NavigationRunner', () => {
     });
 
     it('should retain PageLoadError and associated warnings', async () => {
-      config = initializeConfig(
+      config = (await initializeConfig(
         {
           ...config,
           navigations: [
@@ -265,7 +264,7 @@ describe('NavigationRunner', () => {
           ],
         },
         {gatherMode: 'navigation'}
-      ).config;
+      )).config;
 
       // Ensure the first real page load fails.
       mocks.navigationMock.gotoURL.mockImplementation((driver, url) => {

@@ -6,10 +6,9 @@
 
 // node lighthouse-core/scripts/print-a11y-scoring.js
 
-import defaultConfig from '../config/default-config.js';
 import {initializeConfig} from '../fraggle-rock/config/config.js';
 
-const {config} = initializeConfig(defaultConfig, {gatherMode: 'navigation'});
+const {config} = await initializeConfig(undefined, {gatherMode: 'navigation'});
 if (!config.categories || !config.audits) throw new Error('wut');
 
 const auditRefs = config.categories.accessibility.auditRefs;

@@ -4,7 +4,6 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-
 import log from 'lighthouse-logger';
 
 import BaseAudit from '../../../audits/audit.js';
@@ -526,8 +525,36 @@ describe('Fraggle Rock Config Filtering', () => {
       });
     });
 
-    it('should preserve full-page-screenshot', () => {
-      config = initializeConfig(undefined, {gatherMode: 'navigation'}).config;
+    it('should keep all audits if there are no categories', () => {
+      config = {
+        ...config,
+        audits: [
+          ...audits,
+          {implementation: NavigationOnlyAudit, options: {}},
+        ],
+        categories: {},
+      };
+
+      const filtered = filters.filterConfigByExplicitFilters(config, {
+        onlyAudits: null,
+        onlyCategories: null,
+        skipAudits: null,
+      });
+      expect(filtered).toMatchObject({
+        navigations: [{id: 'firstPass'}],
+        artifacts: [{id: 'Snapshot'}, {id: 'Timespan'}],
+        audits: [
+          {implementation: SnapshotAudit},
+          {implementation: TimespanAudit},
+          {implementation: NavigationAudit},
+          {implementation: ManualAudit},
+          {implementation: NavigationOnlyAudit},
+        ],
+      });
+    });
+
+    it('should preserve full-page-screenshot', async () => {
+      config = (await initializeConfig(undefined, {gatherMode: 'navigation'})).config;
 
       const filtered = filters.filterConfigByExplicitFilters(config, {
         onlyAudits: ['color-contrast'],

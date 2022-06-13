@@ -4,15 +4,16 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-
 import {strict as assert} from 'assert';
 
 import FMPAudit from '../../../audits/metrics/first-meaningful-paint.js';
 import Audit from '../../../audits/audit.js';
 import constants from '../../../config/constants.js';
-import trace from '../../fixtures/traces/progressive-app-m60.json';
-import devtoolsLogs from '../../fixtures/traces/progressive-app-m60.devtools.log.json';
 import {getURLArtifactFromDevtoolsLog} from '../../test-utils.js';
+import {readJson} from '../../../../root.js';
+
+const trace = readJson('../../fixtures/traces/progressive-app-m60.json', import.meta);
+const devtoolsLogs = readJson('../../fixtures/traces/progressive-app-m60.devtools.log.json', import.meta);
 
 /**
  * @param {{

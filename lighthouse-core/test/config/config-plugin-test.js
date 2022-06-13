@@ -4,14 +4,13 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-
 import {strict as assert} from 'assert';
 
+import {getModulePath} from '../../../esm-utils.mjs';
 import ConfigPlugin from '../../config/config-plugin.js';
 import i18n from '../../lib/i18n/i18n.js';
-import {createCommonjsRefs} from '../../scripts/esm-utils.js';
 
-const {__filename} = createCommonjsRefs(import.meta);
+const modulePath = getModulePath(import.meta);
 
 /**
  * @param {any} val
@@ -73,7 +72,7 @@ describe('ConfigPlugin', () => {
       title: 'this is a title',
       description: 'this is a description',
     };
-    const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
+    const str_ = i18n.createMessageInstanceIdFn(modulePath, UIStrings);
 
     const localizedPlugin = {
       groups: {

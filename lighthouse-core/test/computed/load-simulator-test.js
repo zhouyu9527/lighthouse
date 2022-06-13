@@ -4,12 +4,13 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-
 import {strict as assert} from 'assert';
 
-import devtoolsLog from '../fixtures/traces/progressive-app-m60.devtools.log.json';
+import {readJson} from '../../../root.js';
 import LoadSimulator from '../../computed/load-simulator.js';
 import NetworkNode from '../../lib/dependency-graph/network-node.js';
+
+const devtoolsLog = readJson('../fixtures/traces/progressive-app-m60.devtools.log.json', import.meta);
 
 function createNetworkNode() {
   return new NetworkNode({

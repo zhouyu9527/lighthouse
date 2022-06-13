@@ -4,22 +4,23 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-
 import {strict as assert} from 'assert';
 import fs from 'fs';
 
 import assetSaver from '../../lib/asset-saver.js';
 import Metrics from '../../lib/traces/pwmetrics-events.js';
 import LHError from '../../lib/lh-error.js';
-import traceEvents from '../fixtures/traces/progressive-app.json';
-import dbwTrace from '../results/artifacts/defaultPass.trace.json';
-import dbwResults from '../results/sample_v2.json';
 import Audit from '../../audits/audit.js';
-import {createCommonjsRefs} from '../../scripts/esm-utils.js';
-import fullTraceObj from '../fixtures/traces/progressive-app-m60.json';
-import devtoolsLog from '../fixtures/traces/progressive-app-m60.devtools.log.json';
+import {getModuleDirectory} from '../../../esm-utils.mjs';
+import {readJson} from '../../../root.js';
 
-const {__dirname} = createCommonjsRefs(import.meta);
+const traceEvents = readJson('../fixtures/traces/progressive-app.json', import.meta);
+const dbwTrace = readJson('../results/artifacts/defaultPass.trace.json', import.meta);
+const dbwResults = readJson('../results/sample_v2.json', import.meta);
+const fullTraceObj = readJson('../fixtures/traces/progressive-app-m60.json', import.meta);
+const devtoolsLog = readJson('../fixtures/traces/progressive-app-m60.devtools.log.json', import.meta);
+
+const moduleDir = getModuleDirectory(import.meta);
 
 // deepStrictEqual can hang on a full trace, we assert trace same-ness like so
 function assertTraceEventsEqual(traceEventsA, traceEventsB) {
@@ -215,7 +216,7 @@ describe('asset-saver helper', () => {
 
   describe('loadArtifacts', () => {
     it('loads artifacts from disk', async () => {
-      const artifactsPath = __dirname + '/../fixtures/artifacts/perflog/';
+      const artifactsPath = moduleDir + '/../fixtures/artifacts/perflog/';
       const artifacts = await assetSaver.loadArtifacts(artifactsPath);
       assert.strictEqual(artifacts.LighthouseRunWarnings.length, 2);
       assert.strictEqual(artifacts.URL.requestedUrl, 'https://www.reddit.com/r/nba');
@@ -225,14 +226,14 @@ describe('asset-saver helper', () => {
   });
 
   describe('JSON serialization', () => {
-    const outputPath = __dirname + '/json-serialization-test-data/';
+    const outputPath = moduleDir + '/json-serialization-test-data/';
 
     afterEach(() => {
       fs.rmSync(outputPath, {recursive: true, force: true});
     });
 
     it('round trips saved artifacts', async () => {
-      const artifactsPath = __dirname + '/../results/artifacts/';
+      const artifactsPath = moduleDir + '/../results/artifacts/';
       const originalArtifacts = await assetSaver.loadArtifacts(artifactsPath);
 
       await assetSaver.saveArtifacts(originalArtifacts, outputPath);
@@ -249,7 +250,7 @@ describe('asset-saver helper', () => {
       const existingDevtoolslogPath = `${outputPath}/bestPass.devtoolslog.json`;
       fs.writeFileSync(existingDevtoolslogPath, '[]');
 
-      const artifactsPath = __dirname + '/../results/artifacts/';
+      const artifactsPath = moduleDir + '/../results/artifacts/';
       const originalArtifacts = await assetSaver.loadArtifacts(artifactsPath);
 
       await assetSaver.saveArtifacts(originalArtifacts, outputPath);

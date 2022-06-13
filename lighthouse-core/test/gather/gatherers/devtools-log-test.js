@@ -4,18 +4,17 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-
 import {strict as assert} from 'assert';
 
-import DevtoolsLog from '../../gather/devtools-log.js';
+import {DevtoolsMessageLog} from '../../../gather/gatherers/devtools-log.js';
 
-describe('DevtoolsLog', () => {
+describe('DevtoolsMessageLog', () => {
   let messageLog;
   const pageMsg = {method: 'Page.frameStartedLoading'};
   const networkMsg = {method: 'Network.requestWillBeSent'};
   const otherMsg = {method: 'Storage.cleared'};
 
-  beforeEach(() => messageLog = new DevtoolsLog(/^(Page|Network)/));
+  beforeEach(() => messageLog = new DevtoolsMessageLog(/^(Page|Network)/));
 
   it('returns an array', () => {
     assert.deepEqual(messageLog.messages, []);
@@ -52,7 +51,7 @@ describe('DevtoolsLog', () => {
   });
 
   it('records everything when no filter provided', () => {
-    messageLog = new DevtoolsLog();
+    messageLog = new DevtoolsMessageLog();
     messageLog.beginRecording();
     messageLog.record(pageMsg);
     messageLog.record(networkMsg);

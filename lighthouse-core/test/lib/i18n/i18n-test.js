@@ -4,21 +4,20 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-
 import path from 'path';
 
 import {jest} from '@jest/globals';
 import log from 'lighthouse-logger';
 
 import i18n from '../../../lib/i18n/i18n.js';
-import {createCommonjsRefs} from '../../../scripts/esm-utils.js';
+import {getModuleDirectory} from '../../../../esm-utils.mjs';
 
-const {__dirname} = createCommonjsRefs(import.meta);
+const moduleDir = getModuleDirectory(import.meta);
 
 describe('i18n', () => {
   describe('#createMessageInstanceIdFn', () => {
     it('returns an IcuMessage reference', () => {
-      const fakeFile = path.join(__dirname, 'fake-file.js');
+      const fakeFile = path.join(moduleDir, 'fake-file.js');
       const templates = {daString: 'use {x} me!'};
       const formatter = i18n.createMessageInstanceIdFn(fakeFile, templates);
 

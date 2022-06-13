@@ -4,13 +4,13 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-
 import {strict as assert} from 'assert';
 
-import pwaTrace from '../fixtures/traces/progressive-app.json';
-import threeFrameTrace from '../fixtures/traces/threeframes-blank_content_more.json';
 import Speedline from '../../computed/speedline.js';
 import {readJson} from '../../../root.js';
+
+const pwaTrace = readJson('../fixtures/traces/progressive-app.json', import.meta);
+const threeFrameTrace = readJson('../fixtures/traces/threeframes-blank_content_more.json', import.meta);
 
 describe('Speedline gatherer', () => {
   it('returns an error message on faulty trace data', () => {

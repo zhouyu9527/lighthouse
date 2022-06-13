@@ -4,15 +4,13 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-
 import lighthouseStackPacksDep from 'lighthouse-stack-packs';
 
 import stackPacksLib from '../../lib/stack-packs.js';
-import defaultConfig from '../../config/default-config.js';
 import {initializeConfig} from '../../fraggle-rock/config/config.js';
 
-function getAuditIds() {
-  const {config} = initializeConfig(defaultConfig, {gatherMode: 'navigation'});
+async function getAuditIds() {
+  const {config} = await initializeConfig(undefined, {gatherMode: 'navigation'});
   return config.audits.map(a => a.implementation.meta.id);
 }
 
@@ -232,8 +230,8 @@ Array [
 
   // Keys for plugin audits are allowed in this package.
   // Make sure none are typos of core audits.
-  it('snapshot unrecognized keys', () => {
-    const auditIds = getAuditIds();
+  it('snapshot unrecognized keys', async () => {
+    const auditIds = await getAuditIds();
 
     const unrecognizedKeys = new Set();
     for (const pack of lighthouseStackPacksDep) {

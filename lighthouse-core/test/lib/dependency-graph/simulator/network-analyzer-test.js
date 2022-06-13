@@ -4,13 +4,14 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-
 import {strict as assert} from 'assert';
 
 import NetworkAnalyzer from '../../../../lib/dependency-graph/simulator/network-analyzer.js';
 import NetworkRecords from '../../../../computed/network-records.js';
-import devtoolsLog from '../../../fixtures/traces/progressive-app-m60.devtools.log.json';
-import devtoolsLogWithRedirect from '../../../fixtures/traces/site-with-redirect.devtools.log.json';
+import {readJson} from '../../../../../root.js';
+
+const devtoolsLog = readJson('../../../fixtures/traces/progressive-app-m60.devtools.log.json', import.meta);
+const devtoolsLogWithRedirect = readJson('../../../fixtures/traces/site-with-redirect.devtools.log.json', import.meta);
 
 describe('DependencyGraph/Simulator/NetworkAnalyzer', () => {
   let recordId;

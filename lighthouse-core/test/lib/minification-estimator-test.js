@@ -4,15 +4,14 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-
 import fs from 'fs';
 import {strict as assert} from 'assert';
+import {createRequire} from 'module';
 
 import {computeCSSTokenLength, computeJSTokenLength} from '../../lib/minification-estimator.js'; // eslint-disable-line max-len
 import {LH_ROOT} from '../../../root.js';
-import {createCommonjsRefs} from '../../scripts/esm-utils.js';
 
-const {require} = createCommonjsRefs(import.meta);
+const require = createRequire(import.meta.url);
 
 const angularJs = fs.readFileSync(require.resolve('angular/angular.js'), 'utf8');
 const courseheroFilename =

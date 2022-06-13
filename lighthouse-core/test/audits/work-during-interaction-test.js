@@ -6,9 +6,11 @@
 
 /* eslint-disable no-irregular-whitespace */
 
+import {readJson} from '../../../root.js';
 import WorkDuringInteraction from '../../audits/work-during-interaction.js';
-import interactionTrace from '../fixtures/traces/timespan-responsiveness-m103.trace.json';
-import noInteractionTrace from '../fixtures/traces/jumpy-cls-m90.json';
+
+const interactionTrace = readJson('../fixtures/traces/timespan-responsiveness-m103.trace.json', import.meta);
+const noInteractionTrace = readJson('../fixtures/traces/jumpy-cls-m90.json', import.meta);
 
 describe('Interaction to Next Paint', () => {
   function getTestData() {
@@ -167,8 +169,8 @@ Object {
           },
           Object {
             "phase": Object {
-              "formattedDefault": "Processing delay",
-              "i18nId": "lighthouse-core/audits/work-during-interaction.js | processingDelay",
+              "formattedDefault": "Processing time",
+              "i18nId": "lighthouse-core/audits/work-during-interaction.js | processingTime",
               "values": undefined,
             },
             "subItems": Object {
@@ -227,7 +229,7 @@ Object {
             "endTs": 633282934296,
             "startTs": 633282649296,
           },
-          "processingDelay": Object {
+          "processingTime": Object {
             "endTs": 633282649296,
             "startTs": 633282608296,
           },

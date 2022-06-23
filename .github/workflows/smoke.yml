@@ -135,11 +135,21 @@ jobs:
     - run: yarn build-report
     - run: yarn reset-link
 
+    - name: Define ToT chrome path
+      if: matrix.chrome-channel == 'ToT'
+      run: echo "CHROME_PATH=/home/runner/chrome-linux-tot/chrome" >> $GITHUB_ENV
+
+    # Chrome Stable is already installed by default.
+    - name: Install Chrome ToT
+      if: matrix.chrome-channel == 'ToT'
+      working-directory: /home/runner
+      run: bash $GITHUB_WORKSPACE/lighthouse-core/scripts/download-chrome.sh && mv chrome-linux chrome-linux-tot
+
     - run: sudo apt-get install xvfb
     - name: yarn smoke --fraggle-rock
       # Disabled to fix CI while we investigate what the bug is.
-      #   perf-diagnostics-third-party, oopif-requests, oopif-scripts
-      run: xvfb-run --auto-servernum yarn smoke --debug --fraggle-rock -j=2 --retries=2 --shard=${{ matrix.smoke-test-shard }}/$SHARD_TOTAL --invert-match perf-diagnostics-third-party oopif-requests oopif-scripts
+      #   oopif-scripts
+      run: xvfb-run --auto-servernum yarn smoke --debug --fraggle-rock -j=2 --retries=2 --shard=${{ matrix.smoke-test-shard }}/$SHARD_TOTAL --invert-match oopif-scripts
 
     # Fail if any changes were written to source files.
     - run: git diff --exit-code
@@ -217,11 +227,21 @@ jobs:
     - run: yarn build-report
     - run: yarn build-devtools
 
+    - name: Define ToT chrome path
+      if: matrix.chrome-channel == 'ToT'
+      run: echo "CHROME_PATH=/home/runner/chrome-linux-tot/chrome" >> $GITHUB_ENV
+
+    # Chrome Stable is already installed by default.
+    - name: Install Chrome ToT
+      if: matrix.chrome-channel == 'ToT'
+      working-directory: /home/runner
+      run: bash $GITHUB_WORKSPACE/lighthouse-core/scripts/download-chrome.sh && mv chrome-linux chrome-linux-tot
+
     - run: sudo apt-get install xvfb
     - name: yarn test-bundle
       # Disabled to fix CI while we investigate what the bug is.
-      #   perf-diagnostics-third-party, oopif-requests, oopif-scripts
-      run: xvfb-run --auto-servernum yarn test-bundle --fraggle-rock --shard=${{ matrix.smoke-test-shard }}/$SHARD_TOTAL --invert-match perf-diagnostics-third-party oopif-requests oopif-scripts
+      #   oopif-scripts
+      run: xvfb-run --auto-servernum yarn test-bundle --fraggle-rock --shard=${{ matrix.smoke-test-shard }}/$SHARD_TOTAL --invert-match oopif-scripts
 
     # Fail if any changes were written to source files.
     - run: git diff --exit-code

@@ -11,6 +11,7 @@ const ChromeProtocol = require('./gather/connections/cri.js');
 const Config = require('./config/config.js');
 const URL = require('./lib/url-shim.js');
 const fraggleRock = require('./fraggle-rock/api.js');
+const {initializeConfig} = require('./fraggle-rock/config/config.js');
 
 /** @typedef {import('./gather/connections/connection.js')} Connection */
 
@@ -44,6 +45,7 @@ async function lighthouse(url, flags = {}, configJSON, page) {
 /**
  * Run Lighthouse using the legacy navigation runner.
  * This is left in place for any clients that don't support FR navigations yet (e.g. Lightrider)
+ * @deprecated
  * @param {string=} url The URL to test. Optional if running in auditMode.
  * @param {LH.Flags=} flags Optional settings for the Lighthouse run. If present,
  *   they will override any settings in the config.
@@ -57,7 +59,7 @@ async function legacyNavigation(url, flags = {}, configJSON, userConnection) {
   flags.logLevel = flags.logLevel || 'error';
   log.setLevel(flags.logLevel);
 
-  const config = await generateConfig(configJSON, flags);
+  const config = await generateLegacyConfig(configJSON, flags);
   const computedCache = new Map();
   const options = {config, computedCache};
   const connection = userConnection || new ChromeProtocol(flags.port, flags.hostname);
@@ -76,14 +78,31 @@ async function legacyNavigation(url, flags = {}, configJSON, userConnection) {
  *   not present, the default config is used.
  * @param {LH.Flags=} flags Optional settings for the Lighthouse run. If present,
  *   they will override any settings in the config.
+ * @param {LH.Gatherer.GatherMode=} gatherMode Gather mode used to collect artifacts. If present
+ *   the config may override certain settings based on the mode.
+ * @return {Promise<LH.Config.FRConfig>}
+ */
+async function generateConfig(configJson, flags = {}, gatherMode = 'navigation') {
+  const {config} = await initializeConfig(gatherMode, configJson, flags);
+  return config;
+}
+
+/**
+ * Generate a legacy Lighthouse Config.
+ * @deprecated
+ * @param {LH.Config.Json=} configJson Configuration for the Lighthouse run. If
+ *   not present, the default config is used.
+ * @param {LH.Flags=} flags Optional settings for the Lighthouse run. If present,
+ *   they will override any settings in the config.
  * @return {Promise<Config>}
  */
-function generateConfig(configJson, flags) {
+function generateLegacyConfig(configJson, flags) {
   return Config.fromJson(configJson, flags);
 }
 
 lighthouse.legacyNavigation = legacyNavigation;
 lighthouse.generateConfig = generateConfig;
+lighthouse.generateLegacyConfig = generateLegacyConfig;
 lighthouse.getAuditList = Runner.getAuditList;
 lighthouse.traceCategories = require('./gather/driver.js').traceCategories;
 lighthouse.Audit = require('./audits/audit.js');

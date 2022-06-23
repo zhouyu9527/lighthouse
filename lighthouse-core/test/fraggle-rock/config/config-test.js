@@ -499,7 +499,7 @@ describe('getConfigDisplayString', () => {
       ],
     };
 
-    const {config} = await initializeConfig(configJson, {gatherMode: 'navigation'});
+    const {config} = await initializeConfig('navigation', configJson);
     const printed = getConfigDisplayString(config);
     const printedConfig = JSON.parse(printed);
 
@@ -515,7 +515,7 @@ describe('getConfigDisplayString', () => {
   });
 
   it('returns localized category titles', async () => {
-    const {config} = await initializeConfig(undefined, {gatherMode: 'navigation'});
+    const {config} = await initializeConfig('navigation');
     const printed = getConfigDisplayString(config);
     const printedConfig = JSON.parse(printed);
     let localizableCount = 0;
@@ -536,11 +536,11 @@ describe('getConfigDisplayString', () => {
 
   it('returns a valid ConfigJson that can make an identical Config', async () => {
     // depends on defaultConfig having a `path` for all gatherers and audits.
-    const {config: firstConfig} = await initializeConfig(undefined, {gatherMode: 'navigation'});
+    const {config: firstConfig} = await initializeConfig('navigation');
     const firstPrint = getConfigDisplayString(firstConfig);
 
     const {config: secondConfig} =
-      await initializeConfig(JSON.parse(firstPrint), {gatherMode: 'navigation'});
+      await initializeConfig('navigation', JSON.parse(firstPrint));
     const secondPrint = getConfigDisplayString(secondConfig);
 
     expect(firstPrint).toEqual(secondPrint);

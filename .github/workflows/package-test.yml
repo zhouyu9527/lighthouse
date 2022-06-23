@@ -46,12 +46,10 @@ jobs:
     - run: sudo apt-get install xvfb
 
     - name: Define ToT chrome path
-      if: matrix.chrome-channel == 'ToT'
       run: echo "CHROME_PATH=/home/runner/chrome-linux-tot/chrome" >> $GITHUB_ENV
 
     # Chrome Stable is already installed by default.
     - name: Install Chrome ToT
-      if: matrix.chrome-channel == 'ToT'
       working-directory: /home/runner
       run: bash $GITHUB_WORKSPACE/lighthouse-core/scripts/download-chrome.sh && mv chrome-linux chrome-linux-tot
 

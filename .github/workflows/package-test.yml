@@ -2,7 +2,7 @@ name: package-test
 
 on:
   push:
-    # branches: [master]
+    branches: [master]
   pull_request: # run on all PRs, not just PRs to a particular branch
 
 jobs:
@@ -48,7 +48,6 @@ jobs:
     - name: Define ToT chrome path
       run: echo "CHROME_PATH=/home/runner/chrome-linux-tot/chrome" >> $GITHUB_ENV
 
-    # Chrome Stable is already installed by default.
     - name: Install Chrome ToT
       working-directory: /home/runner
       run: bash $GITHUB_WORKSPACE/lighthouse-core/scripts/download-chrome.sh && mv chrome-linux chrome-linux-tot

@@ -61,8 +61,8 @@ async function buildDevtools(logs) {
   if (process.env.CI) return;
 
   process.env.DEVTOOLS_PATH = devtoolsDir;
-  await spawnAndLog(logs, 'bash', ['lighthouse-core/test/chromium-web-tests/download-devtools.sh']);
-  await spawnAndLog(logs, 'bash', ['lighthouse-core/test/chromium-web-tests/roll-devtools.sh']);
+  await spawnAndLog(logs, 'bash', ['lighthouse-core/test/devtools-tests/download-devtools.sh']);
+  await spawnAndLog(logs, 'bash', ['lighthouse-core/test/devtools-tests/roll-devtools.sh']);
 }
 
 /**

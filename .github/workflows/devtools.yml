@@ -62,12 +62,12 @@ jobs:
       working-directory: ${{ github.workspace }}/lighthouse
 
     - name: Download depot tools
-      run: bash $GITHUB_WORKSPACE/lighthouse/lighthouse-core/test/chromium-web-tests/download-depot-tools.sh
+      run: bash $GITHUB_WORKSPACE/lighthouse/lighthouse-core/test/devtools-tests/download-depot-tools.sh
     - name: Download DevTools Frontend
-      run: bash $GITHUB_WORKSPACE/lighthouse/lighthouse-core/test/chromium-web-tests/download-devtools.sh
+      run: bash $GITHUB_WORKSPACE/lighthouse/lighthouse-core/test/devtools-tests/download-devtools.sh
 
     - name: Roll Lighthouse + build DevTools
-      run: bash $GITHUB_WORKSPACE/lighthouse/lighthouse-core/test/chromium-web-tests/roll-devtools.sh
+      run: bash $GITHUB_WORKSPACE/lighthouse/lighthouse-core/test/devtools-tests/roll-devtools.sh
 
     - name: Cache build artifacts
       id: devtools-build-artifacts
@@ -101,7 +101,7 @@ jobs:
       run: echo "$DEPOT_TOOLS_PATH" >> $GITHUB_PATH
     # For vpython.
     - name: Download depot tools
-      run: bash $GITHUB_WORKSPACE/lighthouse/lighthouse-core/test/chromium-web-tests/download-depot-tools.sh
+      run: bash $GITHUB_WORKSPACE/lighthouse/lighthouse-core/test/devtools-tests/download-depot-tools.sh
 
     - name: Load build artifacts
       id: devtools-build-artifacts
@@ -146,11 +146,6 @@ jobs:
           ${{ github.workspace }}/.gclient
           ${{ github.workspace }}/.gclient_entries
         key: devtools-build-artifacts-${{ github.run_id }}
-
-    # - name: Download Blink Tools
-    #   run: bash $GITHUB_WORKSPACE/lighthouse/lighthouse-core/test/chromium-web-tests/download-blink-tools.sh
-    # - name: Download Content Shell
-    #   run: bash $GITHUB_WORKSPACE/lighthouse/lighthouse-core/test/chromium-web-tests/download-content-shell.sh
 
     - run: yarn --frozen-lockfile --network-timeout 1000000
       working-directory: ${{ github.workspace }}/lighthouse

@@ -15,6 +15,7 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 LH_ROOT="$SCRIPT_DIR/../../.."
 TEST_DIR="$LH_ROOT/.tmp/chromium-web-tests"
 
+export DEPOT_TOOLS_PATH="$TEST_DIR/depot-tools"
 export DEVTOOLS_PATH=${DEVTOOLS_PATH:-"$TEST_DIR/devtools/devtools-frontend"}
 
 if [ -z ${SKIP_DOWNLOADS+x} ]
@@ -25,6 +26,7 @@ then
   echo "========================================"
   echo
 
-  bash "$SCRIPT_DIR/../chromium-web-tests/download-devtools.sh"
-  bash "$SCRIPT_DIR/../chromium-web-tests/download-content-shell.sh"
+  bash "$SCRIPT_DIR/download-depot-tools.sh"
+  bash "$SCRIPT_DIR/download-devtools.sh"
+  bash "$SCRIPT_DIR/download-content-shell.sh"
 fi

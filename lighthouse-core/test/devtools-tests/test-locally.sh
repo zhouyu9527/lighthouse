@@ -16,5 +16,5 @@ set -euo pipefail
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 source "$SCRIPT_DIR/setup.sh"
-bash "$SCRIPT_DIR/../chromium-web-tests/roll-devtools.sh"
+bash "$SCRIPT_DIR/roll-devtools.sh"
 bash "$SCRIPT_DIR/run-e2e-tests.sh" $*

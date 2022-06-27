@@ -21,12 +21,11 @@ export DEVTOOLS_PATH=${DEVTOOLS_PATH:-"$TEST_DIR/devtools/devtools-frontend"}
 if [ -z ${SKIP_DOWNLOADS+x} ]
 then
   echo "========================================"
-  echo "Downloading latest content_shell and DevTools"
+  echo "Downloading latest DevTools"
   echo "To skip this step, set SKIP_DOWNLOADS=1"
   echo "========================================"
   echo
 
   bash "$SCRIPT_DIR/download-depot-tools.sh"
   bash "$SCRIPT_DIR/download-devtools.sh"
-  bash "$SCRIPT_DIR/download-content-shell.sh"
 fi

@@ -34,14 +34,13 @@ jobs:
     # Caches are invalidated at least once a week, so that's the max time between testing
     # with the latest dependencies. Any commit to the DevTools repo touching Lighthouse
     # code will invalidate the cache sooner.
-    - name: Cache depot tools, devtools, blink tools and content shell
+    - name: Cache depot tools and devtools
       id: devtools-cache
       uses: actions/cache@v3
       with:
         path: |
           ${{ env.DEPOT_TOOLS_PATH }}
           ${{ env.DEVTOOLS_PATH }}
-          ${{ github.workspace }}/lighthouse/.tmp/chromium-web-tests/content-shells
           ${{ github.workspace }}/.gclient
           ${{ github.workspace }}/.gclient_entries
         # This hash key changes:

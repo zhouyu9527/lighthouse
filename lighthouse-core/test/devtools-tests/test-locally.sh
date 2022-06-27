@@ -7,9 +7,7 @@
 ##
 
 # Runs the devtools e2e tests in third-party/devtools-tests using the latest
-# Lighthouse, DevTools, and Chrome content_shell*
-#
-# * Not exactly the latest, but close. See download-content-shell.js
+# Lighthouse and DevTools
 
 set -euo pipefail
 

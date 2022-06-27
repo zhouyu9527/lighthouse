@@ -7,7 +7,7 @@
 ##
 
 # Prints to stdout text that, when it changes, indicates that the devtools tests
-# should update its dependencies (devtools frontend, content shell, blink tools).
+# should rebuild the devtools frontend.
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 LH_ROOT="$SCRIPT_DIR/../.."

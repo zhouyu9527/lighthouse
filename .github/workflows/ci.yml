@@ -17,7 +17,9 @@ jobs:
     - name: git clone
       uses: actions/checkout@v2
       with:
-        fetch-depth: 100
+        # Just bumped b/c https://github.com/GoogleChrome/lighthouse/pull/14167 is yuuuuuuuge.
+        # Don't forget to drop back to 100.
+        fetch-depth: 200 
     - run: bash lighthouse-core/scripts/github-actions-commit-range.sh
       env:
         GITHUB_CONTEXT_PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}

@@ -29,8 +29,10 @@ before(async () => {
   td.replaceEsm('../../sentry-prompt.js', {
     askPermission: mockAskPermission,
   });
-  td.replace('../../../lighthouse-core/lib/sentry.js', {
-    init: mockSentryInit,
+  td.replaceEsm('../../../lighthouse-core/lib/sentry.js', {
+    Sentry: {
+      init: mockSentryInit,
+    },
   });
   td.replaceEsm('lighthouse-logger', undefined, {setLevel: mockLoggerSetLevel});
   bin = await import('../../bin.js');

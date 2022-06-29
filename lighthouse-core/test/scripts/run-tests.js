@@ -101,6 +101,7 @@ const testsToIsolate = new Set([
   'report/test/clients/bundle-test.js',
   'report/test/clients/bundle-test.js',
   'shared/test/localization/format-test.js',
+  'lighthouse-cli/test/cli/run-test.js',
 ]);
 
 const y = yargs(yargsHelpers.hideBin(process.argv));

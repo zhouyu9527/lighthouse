@@ -8,6 +8,7 @@
 import {Audit} from './audit.js';
 import URL from '../lib/url-shim.js';
 import NetworkRecords from '../computed/network-records.js';
+import MainResource from '../computed/main-resource.js';
 
 class NetworkRequests extends Audit {
   /**

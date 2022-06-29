@@ -5,8 +5,6 @@
  */
 'use strict';
 
-import {jest} from '@jest/globals';
-
 import fetch from 'node-fetch';
 
 import {UIStrings} from '../../lighthouse-core/audits/installable-manifest.js';

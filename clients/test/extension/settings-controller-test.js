@@ -12,7 +12,7 @@ const format = require('../../../shared/localization/format.js');
 // TODO(esmodules): remove when shared/ is esm
 let defaultConfig;
 before(async () => {
-  defaultConfig = await import('../../../lighthouse-core/config/default-config.js');
+  defaultConfig = (await import('../../../lighthouse-core/config/default-config.js')).default;
 });
 
 describe('Lighthouse chrome extension SettingsController', () => {

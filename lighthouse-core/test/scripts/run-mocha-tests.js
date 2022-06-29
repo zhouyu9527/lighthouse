@@ -101,7 +101,6 @@ const testsToIsolate = new Set([
   'report/test/clients/bundle-test.js',
   'report/test/clients/bundle-test.js',
   'shared/test/localization/format-test.js',
-  'lighthouse-cli/test/cli/run-test.js',
 ]);
 
 const y = yargs(yargsHelpers.hideBin(process.argv));
@@ -217,7 +216,7 @@ const baseArgs = [
   '--loader=testdouble',
 ];
 if (argv.t) baseArgs.push(`--grep='${argv.t}'`);
-if (!argv.t) baseArgs.push('--fail-zero');
+if (!argv.t || process.env.CI) baseArgs.push('--fail-zero');
 if (argv.bail) baseArgs.push('--bail');
 if (argv.parallel) baseArgs.push('--parallel');
 baseArgs.push(...mochaPassThruArgs);
@@ -283,8 +282,9 @@ let didFail = false;
  * @param {string[]} tests
  */
 function runMochaCLI(tests) {
-  const file = 'node_modules/.bin/mocha';
+  const file = 'npx';
   const args = [
+    'mocha',
     ...baseArgs,
     ...tests,
   ];

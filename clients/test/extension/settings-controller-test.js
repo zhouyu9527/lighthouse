@@ -6,8 +6,14 @@
 'use strict';
 
 const SettingsController = require('../../extension/scripts/settings-controller.js');
-const defaultConfig = require('../../../lighthouse-core/config/default-config.js');
+// const defaultConfig = require('../../../lighthouse-core/config/default-config.js');
 const format = require('../../../shared/localization/format.js');
+
+// TODO(esmodules): remove when shared/ is esm
+let defaultConfig;
+before(async () => {
+  defaultConfig = await import('../../../lighthouse-core/config/default-config.js');
+});
 
 describe('Lighthouse chrome extension SettingsController', () => {
   it('default categories should be correct', () => {

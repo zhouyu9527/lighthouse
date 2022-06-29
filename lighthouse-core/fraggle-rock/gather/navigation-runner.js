@@ -18,7 +18,6 @@ import {defaultNavigationConfig} from '../../config/constants.js';
 import {initializeConfig} from '../config/config.js';
 import {getBaseArtifacts, finalizeArtifacts} from './base-artifacts.js';
 import format from '../../../shared/localization/format.js';
-import {LighthouseError} from '../../lib/lh-error.js';
 import URL from '../../lib/url-shim.js';
 import {getPageLoadError} from '../../lib/navigation-error.js';
 import Trace from '../../gather/gatherers/trace.js';
@@ -177,6 +176,7 @@ async function _computeNavigationResult(
       url: mainDocumentUrl,
       loadFailureMode: navigationContext.navigation.loadFailureMode,
       networkRecords: debugData.records,
+      warnings,
     })
     : navigationError;
 

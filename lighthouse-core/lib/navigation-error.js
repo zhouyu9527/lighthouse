@@ -8,6 +8,22 @@
 import {LighthouseError} from './lh-error.js';
 import {NetworkAnalyzer} from './dependency-graph/simulator/network-analyzer.js';
 import {NetworkRequest} from './network-request.js';
+import * as i18n from '../lib/i18n/i18n.js';
+
+const UIStrings = {
+  /**
+   * Warning shown in report when the page under test is an XHTML document, which Lighthouse does not directly support
+   * so we display a warning.
+   */
+  warningXhtml:
+    'The page MIME type is XHTML: Lighthouse does not explicitly support this document type',
+};
+
+const str_ = i18n.createMessageInstanceIdFn(import.meta.url, UIStrings);
+
+// MIME types are case-insensitive but Chrome normalizes MIME types to be lowercase.
+const HTML_MIME_TYPE = 'text/html';
+const XHTML_MIME_TYPE = 'application/xhtml+xml';
 
 /**
  * Returns an error if the original network request failed or wasn't found.
@@ -78,16 +94,15 @@ function getInterstitialError(mainRecord, networkRecords) {
  * @return {LH.LighthouseError|undefined}
  */
 function getNonHtmlError(finalRecord) {
-  // MIME types are case-insenstive but Chrome normalizes MIME types to be lowercase.
-  const HTML_MIME_TYPE = 'text/html';
-
   // If we never requested a document, there's no doctype error, let other cases handle it.
   if (!finalRecord) return undefined;
 
   // mimeType is determined by the browser, we assume Chrome is determining mimeType correctly,
   // independently of 'Content-Type' response headers, and always sending mimeType if well-formed.
-  if (HTML_MIME_TYPE !== finalRecord.mimeType) {
-    return new LighthouseError(LighthouseError.errors.NOT_HTML, {mimeType: finalRecord.mimeType});
+  if (finalRecord.mimeType !== HTML_MIME_TYPE && finalRecord.mimeType !== XHTML_MIME_TYPE) {
+    return new LighthouseError(LighthouseError.errors.NOT_HTML, {
+      mimeType: finalRecord.mimeType,
+    });
   }
 
   return undefined;
@@ -97,7 +112,7 @@ function getNonHtmlError(finalRecord) {
  * Returns an error if the page load should be considered failed, e.g. from a
  * main document request failure, a security issue, etc.
  * @param {LH.LighthouseError|undefined} navigationError
- * @param {{url: string, loadFailureMode: LH.Gatherer.PassContext['passConfig']['loadFailureMode'], networkRecords: Array<LH.Artifacts.NetworkRequest>}} context
+ * @param {{url: string, loadFailureMode: LH.Gatherer.PassContext['passConfig']['loadFailureMode'], networkRecords: Array<LH.Artifacts.NetworkRequest>, warnings: Array<string | LH.IcuMessage>}} context
  * @return {LH.LighthouseError|undefined}
  */
 function getPageLoadError(navigationError, context) {
@@ -120,6 +135,10 @@ function getPageLoadError(navigationError, context) {
   let finalRecord;
   if (mainRecord) {
     finalRecord = NetworkAnalyzer.resolveRedirects(mainRecord);
+  }
+
+  if (finalRecord?.mimeType === XHTML_MIME_TYPE) {
+    context.warnings.push(str_(UIStrings.warningXhtml));
   }
 
   const networkError = getNetworkError(mainRecord);
@@ -147,10 +166,10 @@ function getPageLoadError(navigationError, context) {
   return navigationError;
 }
 
-
 export {
   getNetworkError,
   getInterstitialError,
   getPageLoadError,
   getNonHtmlError,
+  UIStrings,
 };

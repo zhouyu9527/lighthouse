@@ -8,7 +8,8 @@
  * @fileoverview Mock fraggle rock driver for testing.
  */
 
-import {jest} from '@jest/globals';
+import jestMock from 'jest-mock';
+import * as td from 'testdouble';
 
 import {
   createMockOnFn,
@@ -158,7 +159,7 @@ function createMockDriver() {
     _page: page,
     _executionContext: context,
     _session: session,
-    url: jest.fn(() => page.url()),
+    url: jestMock.fn(() => page.url()),
     defaultSession: session,
     connect: fnAny(),
     disconnect: fnAny(),
@@ -173,33 +174,31 @@ function createMockDriver() {
   };
 }
 
+const runnerMock = {
+  getAuditList: fnAny().mockReturnValue([]),
+  getGathererList: fnAny().mockReturnValue([]),
+  audit: fnAny(),
+  gather: fnAny(),
+  reset() {
+    runnerMock.getGathererList.mockReturnValue([]);
+    runnerMock.getAuditList.mockReturnValue([]);
+    runnerMock.audit.mockReset();
+    runnerMock.gather.mockReset();
+  },
+};
 function mockRunnerModule() {
-  const runnerModule = {
-    getAuditList: fnAny().mockReturnValue([]),
-    getGathererList: fnAny().mockReturnValue([]),
-    audit: fnAny(),
-    gather: fnAny(),
-    reset,
-  };
-
-  jest.unstable_mockModule(`${LH_ROOT}/lighthouse-core/runner.js`, () => ({Runner: runnerModule}));
-
-  function reset() {
-    runnerModule.getGathererList.mockReturnValue([]);
-    runnerModule.getAuditList.mockReturnValue([]);
-    runnerModule.audit.mockReset();
-    runnerModule.gather.mockReset();
-  }
-
-  return runnerModule;
+  td.replaceEsm(`${LH_ROOT}/lighthouse-core/runner.js`, {Runner: runnerMock});
+  return runnerMock;
 }
 
 /** @param {() => Driver} driverProvider */
 function mockDriverModule(driverProvider) {
-  // This must be a regular function becaues Driver is always invoked as a constructor.
-  // Arrow functions cannot be invoked with `new`.
-  return function() {
-    return driverProvider();
+  return {
+    // This must be a regular function becaues Driver is always invoked as a constructor.
+    // Arrow functions cannot be invoked with `new`.
+    Driver: function() {
+      return driverProvider();
+    },
   };
 }
 
@@ -291,13 +290,11 @@ function mockDriverSubmodules() {
     return (...args) => target[name](...args);
   };
 
-  /* eslint-disable max-len */
-  jest.unstable_mockModule('../../../gather/driver/navigation.js', () => new Proxy(navigationMock, {get}));
-  jest.unstable_mockModule('../../../gather/driver/prepare.js', () => new Proxy(prepareMock, {get}));
-  jest.unstable_mockModule('../../../gather/driver/storage.js', () => new Proxy(storageMock, {get}));
-  jest.unstable_mockModule('../../../gather/driver/network.js', () => new Proxy(networkMock, {get}));
-  jest.unstable_mockModule('../../../lib/emulation.js', () => new Proxy(emulationMock, {get}));
-  /* eslint-enable max-len */
+  td.replaceEsm('../../../gather/driver/navigation.js', new Proxy(navigationMock, {get}));
+  td.replaceEsm('../../../gather/driver/prepare.js', new Proxy(prepareMock, {get}));
+  td.replaceEsm('../../../gather/driver/storage.js', new Proxy(storageMock, {get}));
+  td.replaceEsm('../../../gather/driver/network.js', new Proxy(networkMock, {get}));
+  td.replaceEsm('../../../lib/emulation.js', new Proxy(emulationMock, {get}));
 
   reset();
 

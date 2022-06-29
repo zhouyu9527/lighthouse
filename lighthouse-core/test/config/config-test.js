@@ -409,7 +409,10 @@ describe('Config', () => {
     }), function(err) {
       // We're expecting not to find parent class Audit, so only reject on our
       // own custom locate audit error, not the usual MODULE_NOT_FOUND.
-      return !/locate audit/.test(err) && err.code === 'MODULE_NOT_FOUND';
+      // TODO(esmodules): Test migration note:
+      //      "custom locate audit error" ??? But this is just a normal Error...
+      //      comment is 4 yr old maybe just stale? we refactoring config require code a lot since then
+      return !/locate audit/.test(err) && err.code === 'ERR_MODULE_NOT_FOUND';
     });
   });
 
@@ -1424,7 +1427,7 @@ describe('Config', () => {
           function(err) {
             // We're expecting not to find parent class Gatherer, so only reject on
             // our own custom locate gatherer error, not the usual MODULE_NOT_FOUND.
-            return !/locate gatherer/.test(err) && err.code === 'MODULE_NOT_FOUND';
+            return !/locate gatherer/.test(err) && err.code === 'ERR_MODULE_NOT_FOUND';
           });
     });
 

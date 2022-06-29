@@ -65,7 +65,7 @@ jobs:
       run: xvfb-run --auto-servernum yarn unit:ci
 
     # Only gather coverage on latest node, where c8 is the most accurate.
-    - name: yarn unit-core
+    - name: yarn unit:cicoverage
       if: ${{ matrix.node == env.LATEST_NODE }}
       run: |
         xvfb-run --auto-servernum yarn unit-core

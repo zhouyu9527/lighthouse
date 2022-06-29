@@ -104,7 +104,10 @@ async function _navigate(navigationContext) {
     });
     return {requestedUrl, mainDocumentUrl, navigationError: undefined, warnings};
   } catch (err) {
-    if (!(err instanceof LighthouseError)) throw err;
+    // TODO: for some reason, when under test LighthouseError !== the LighthouseError from the test file.
+    // yarn mocha navigation-runner-test -t 'should retain PageLoadError'
+    // if (!(err instanceof LighthouseError)) throw err;
+    if (err.name !== 'LighthouseError') throw err;
     if (err.code !== 'NO_FCP' && err.code !== 'PAGE_HUNG') throw err;
     if (typeof requestor !== 'string') throw err;
 

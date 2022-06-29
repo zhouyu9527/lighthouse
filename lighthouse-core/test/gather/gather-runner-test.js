@@ -6,7 +6,7 @@
 
 import {strict as assert} from 'assert';
 
-import {jest} from '@jest/globals';
+import jestMock from 'jest-mock';
 
 import {Gatherer} from '../../gather/gatherers/gatherer.js';
 // import GathererRunner_ from '../../gather/gather-runner.js';
@@ -22,6 +22,7 @@ import {
   makePromiseInspectable,
   flushAllTimersAndMicrotasks,
   fnAny,
+  timers,
   importMock,
 } from '../test-utils.js';
 import {fakeDriver} from './fake-driver.js';
@@ -30,6 +31,9 @@ import {readJson} from '../../../root.js';
 const unresolvedPerfLog = readJson('./../fixtures/unresolved-perflog.json', import.meta);
 
 makeMocksForGatherRunner();
+
+/** @type {jestMock.SpyInstance<Promise<void>, [session: any, pageUrl: string]>} */
+let assertNoSameOriginServiceWorkerClientsMock;
 
 function createTypeHackedGatherRunner() {
   return {
@@ -42,9 +46,6 @@ function createTypeHackedGatherRunner() {
     run: makeParamsOptional(GatherRunner_.run),
     runPass: makeParamsOptional(GatherRunner_.runPass),
     setupDriver: makeParamsOptional(GatherRunner_.setupDriver),
-    // Spies that should have mock implemenations most of the time.
-    assertNoSameOriginServiceWorkerClients: jest.spyOn(GatherRunner_,
-      'assertNoSameOriginServiceWorkerClients'),
   };
 }
 
@@ -62,10 +63,12 @@ let Config;
 
 /** @type {ReturnType<createTypeHackedGatherRunner>} */
 let GatherRunner;
-beforeAll(async () => {
+before(async () => {
   Driver = (await import('../../gather/driver.js')).Driver;
   GatherRunner_ = (await import('../../gather/gather-runner.js')).GatherRunner;
   Config = (await import('../../config/config.js')).Config;
+  assertNoSameOriginServiceWorkerClientsMock =
+    jestMock.spyOn(GatherRunner_, 'assertNoSameOriginServiceWorkerClients');
   GatherRunner = createTypeHackedGatherRunner();
 });
 
@@ -106,10 +109,10 @@ let driver;
 let connectionStub;
 
 function resetDefaultMockResponses() {
-  GatherRunner.assertNoSameOriginServiceWorkerClients = jest.spyOn(GatherRunner_,
-    'assertNoSameOriginServiceWorkerClients');
-  GatherRunner.assertNoSameOriginServiceWorkerClients.mockReset();
-  GatherRunner.assertNoSameOriginServiceWorkerClients.mockResolvedValue();
+  assertNoSameOriginServiceWorkerClientsMock =
+    jestMock.spyOn(GatherRunner_, 'assertNoSameOriginServiceWorkerClients');
+  assertNoSameOriginServiceWorkerClientsMock.mockReset();
+  assertNoSameOriginServiceWorkerClientsMock.mockResolvedValue();
 
   connectionStub.sendCommand = createMockSendCommandFn()
     .mockResponse('Debugger.enable')
@@ -141,7 +144,7 @@ beforeEach(async () => {
     }
   }
 
-  jest.useFakeTimers();
+  timers.useFakeTimers();
   // @ts-expect-error - connectionStub has a mocked version of sendCommand implemented in each test
   connectionStub = new Connection();
   // @ts-expect-error
@@ -160,8 +163,8 @@ beforeEach(async () => {
 });
 
 afterEach(() => {
-  GatherRunner.assertNoSameOriginServiceWorkerClients.mockRestore();
-  jest.useRealTimers();
+  assertNoSameOriginServiceWorkerClientsMock.mockRestore();
+  timers.useRealTimers();
 });
 
 describe('GatherRunner', function() {
@@ -306,7 +309,7 @@ describe('GatherRunner', function() {
     let assertNoSameOriginServiceWorkerClients;
 
     beforeEach(() => {
-      GatherRunner.assertNoSameOriginServiceWorkerClients.mockRestore();
+      assertNoSameOriginServiceWorkerClientsMock.mockRestore();
       assertNoSameOriginServiceWorkerClients = GatherRunner_.assertNoSameOriginServiceWorkerClients;
       session = driver.defaultSession;
       connectionStub.sendCommand = createMockSendCommandFn()
@@ -693,7 +696,7 @@ describe('GatherRunner', function() {
 
     const url = 'https://example.com';
     const driver = Object.assign({}, fakeDriver);
-    const scrollToSpy = jest.spyOn(driver, 'scrollTo');
+    const scrollToSpy = jestMock.spyOn(driver, 'scrollTo');
 
     const passConfig = {
       recordTrace: true,
@@ -872,7 +875,7 @@ describe('GatherRunner', function() {
   describe('artifact collection', () => {
     // Make sure our gatherers never execute in parallel
     it('runs gatherer lifecycle methods strictly in sequence', async () => {
-      jest.useRealTimers();
+      timers.useRealTimers();
       /** @type {Record<string, number>} */
       const counter = {
         beforePass: 0,

@@ -13,7 +13,7 @@ const locales = require('../../localization/locales.js');
 // TODO(esmodules): remove when shared/ is esm
 let i18n;
 let constants;
-beforeAll(async () => {
+before(async () => {
   i18n = await import('../../../lighthouse-core/lib/i18n/i18n.js');
   constants = await import('../../../lighthouse-core/config/constants.js');
 });
@@ -323,7 +323,7 @@ describe('format', () => {
     };
 
     let str_;
-    beforeAll(() => {
+    before(() => {
       str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
     });
 

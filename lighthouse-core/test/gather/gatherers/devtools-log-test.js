@@ -6,7 +6,7 @@
 
 import {strict as assert} from 'assert';
 
-import {DevtoolsMessageLog} from '../../gather/devtools-log.js';
+import {DevtoolsMessageLog} from '../../../gather/gatherers/devtools-log.js';
 
 describe('DevtoolsMessageLog', () => {
   let messageLog;

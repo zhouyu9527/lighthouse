@@ -8,10 +8,11 @@ import fs from 'fs';
 import {strict as assert} from 'assert';
 import path from 'path';
 
-import {jest} from '@jest/globals';
+import jestMock from 'jest-mock';
+import * as td from 'testdouble';
 
 // import Runner from '../runner.js';
-// import GatherRunner from '../gather/gather-runner.js';
+// import {GatherRunner} from '../gather/gather-runner.js';
 import {fakeDriver as driverMock} from './gather/fake-driver.js';
 // import {Config} from '../config/config.js';
 import {Audit} from '../audits/audit.js';
@@ -24,6 +25,8 @@ import {getModuleDirectory} from '../../esm-utils.mjs';
 
 const moduleDir = getModuleDirectory(import.meta);
 
+makeMocksForGatherRunner();
+
 // Some imports needs to be done dynamically, so that their dependencies will be mocked.
 // See: https://jestjs.io/docs/ecmascript-modules#differences-between-esm-and-commonjs
 //      https://github.com/facebook/jest/issues/10025
@@ -34,53 +37,46 @@ let GatherRunner;
 /** @type {typeof import('../config/config.js').Config} */
 let Config;
 
-/** @type {jest.Mock} */
+/** @type {jestMock.Mock} */
 let saveArtifactsSpy;
-/** @type {jest.Mock} */
+/** @type {jestMock.Mock} */
 let saveLhrSpy;
-/** @type {jest.Mock} */
+/** @type {jestMock.Mock} */
 let loadArtifactsSpy;
-/** @type {jest.Mock} */
+/** @type {jestMock.Mock} */
 let gatherRunnerRunSpy;
-/** @type {jest.Mock} */
+/** @type {jestMock.Mock} */
 let runAuditSpy;
 
-jest.unstable_mockModule('../lib/asset-saver.js', () => ({
-  saveArtifacts: saveArtifactsSpy = jest.fn(),
-  saveLhr: saveLhrSpy = jest.fn(),
-  loadArtifacts: loadArtifactsSpy = jest.fn(),
-  gatherRunnerRun: gatherRunnerRunSpy = jest.fn(),
-  runAudit: runAuditSpy = jest.fn(),
-}));
+td.replaceEsm('../lib/asset-saver.js', {
+  saveArtifacts: saveArtifactsSpy = jestMock.fn(assetSaver.saveArtifacts),
+  saveLhr: saveLhrSpy = jestMock.fn(),
+  loadArtifacts: loadArtifactsSpy = jestMock.fn(assetSaver.loadArtifacts),
+});
 
-beforeAll(async () => {
+td.replaceEsm('../gather/driver/service-workers.js', {
+  getServiceWorkerVersions: jestMock.fn().mockResolvedValue({versions: []}),
+  getServiceWorkerRegistrations: jestMock.fn().mockResolvedValue({registrations: []}),
+});
+
+before(async () => {
   Runner = (await import('../runner.js')).Runner;
   GatherRunner = (await import('../gather/gather-runner.js')).GatherRunner;
   Config = (await import('../config/config.js')).Config;
 });
 
 beforeEach(() => {
-  saveArtifactsSpy.mockImplementation(assetSaver.saveArtifacts);
-  saveLhrSpy.mockImplementation(() => {});
-  loadArtifactsSpy.mockImplementation(assetSaver.loadArtifacts);
-  gatherRunnerRunSpy = jest.spyOn(GatherRunner, 'run');
-  runAuditSpy = jest.spyOn(Runner, '_runAudit');
+  gatherRunnerRunSpy = jestMock.spyOn(GatherRunner, 'run');
+  runAuditSpy = jestMock.spyOn(Runner, '_runAudit');
 });
 
 afterEach(() => {
-  saveArtifactsSpy.mockReset();
-  saveLhrSpy.mockReset();
-  loadArtifactsSpy.mockReset();
+  saveArtifactsSpy.mockClear();
+  saveLhrSpy.mockClear();
+  loadArtifactsSpy.mockClear();
   gatherRunnerRunSpy.mockRestore();
   runAuditSpy.mockRestore();
 });
-
-makeMocksForGatherRunner();
-
-jest.unstable_mockModule('../gather/driver/service-workers.js', () => ({
-  getServiceWorkerVersions: jest.fn().mockResolvedValue({versions: []}),
-  getServiceWorkerRegistrations: jest.fn().mockResolvedValue({registrations: []}),
-}));
 
 describe('Runner', () => {
   const createGatherFn = url => {
@@ -118,7 +114,7 @@ describe('Runner', () => {
     const artifactsPath = '.tmp/test_artifacts';
     const resolvedPath = path.resolve(process.cwd(), artifactsPath);
 
-    afterAll(() => {
+    after(() => {
       fs.rmSync(resolvedPath, {recursive: true, force: true});
     });
 
@@ -510,7 +506,7 @@ describe('Runner', () => {
         }
       }
 
-      const auditMockFn = SimpleAudit.audit = jest.fn().mockReturnValue({score: 1});
+      const auditMockFn = SimpleAudit.audit = jestMock.fn().mockReturnValue({score: 1});
       const config = await Config.fromJson({
         settings: {
           auditMode: moduleDir + '/fixtures/artifacts/alphabet-artifacts/',
@@ -543,7 +539,7 @@ describe('Runner', () => {
         }
       }
 
-      const auditMockFn = SimpleAudit.audit = jest.fn().mockReturnValue({score: 1});
+      const auditMockFn = SimpleAudit.audit = jestMock.fn().mockReturnValue({score: 1});
       const config = await Config.fromJson({
         settings: {
           auditMode: moduleDir + '/fixtures/artifacts/alphabet-artifacts/',

@@ -4,32 +4,28 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-import {jest} from '@jest/globals';
+import jestMock from 'jest-mock';
+import * as td from 'testdouble';
 
-// import sentryNode from '@sentry/node';
 import {Sentry} from '../../lib/sentry.js';
 
-let sentryNodeMock;
-jest.unstable_mockModule('@sentry/node', () => (sentryNodeMock = {
-  init: jest.fn().mockReturnValue({install: jest.fn()}),
-  setExtras: jest.fn(),
-  captureException: jest.fn(),
-  withScope: (fn) => fn({
-    setLevel: () => {},
-    setTags: () => {},
-    setExtras: () => {},
-  }),
-}));
-
-beforeAll(async () => {
-  await import('@sentry/node');
-});
-
 describe('Sentry', () => {
+  let sentryNodeMock;
   let configPayload;
   let originalSentry;
 
   beforeEach(() => {
+    td.replaceEsm('@sentry/node', (sentryNodeMock = {
+      init: jestMock.fn().mockReturnValue({install: jestMock.fn()}),
+      setExtras: jestMock.fn(),
+      captureException: jestMock.fn(),
+      withScope: (fn) => fn({
+        setLevel: () => {},
+        setTags: () => {},
+        setExtras: () => {},
+      }),
+    }));
+
     configPayload = {
       url: 'http://example.com',
       flags: {enableErrorReporting: true},
@@ -40,11 +36,7 @@ describe('Sentry', () => {
     // We want to have a fresh state for every test.
     originalSentry = {...Sentry};
 
-    sentryNodeMock.init.mockReset().mockReturnValue({install: jest.fn()});
-    sentryNodeMock.setExtras.mockReset();
-    sentryNodeMock.captureException.mockReset();
-
-    Sentry._shouldSample = jest.fn().mockReturnValue(true);
+    Sentry._shouldSample = jestMock.fn().mockReturnValue(true);
   });
 
   afterEach(() => {

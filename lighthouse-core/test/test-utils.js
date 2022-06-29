@@ -9,11 +9,13 @@ import path from 'path';
 import url from 'url';
 import {createRequire} from 'module';
 
-import {jest} from '@jest/globals';
+import * as td from 'testdouble';
+import jestMock from 'jest-mock';
 
 import {LH_ROOT} from '../../root.js';
 import * as mockCommands from './gather/mock-commands.js';
 import {NetworkRecorder} from '../lib/network-recorder.js';
+import {timers} from './test-env/fake-timers.js';
 
 const require = createRequire(import.meta.url);
 
@@ -169,7 +171,7 @@ function createDecomposedPromise() {
  */
 async function flushAllTimersAndMicrotasks(ms = 1000) {
   for (let i = 0; i < ms; i++) {
-    jest.advanceTimersByTime(1);
+    timers.advanceTimersByTime(1);
     await Promise.resolve();
   }
 }
@@ -179,46 +181,47 @@ async function flushAllTimersAndMicrotasks(ms = 1000) {
  * shouldn't concern themselves about.
  */
 function makeMocksForGatherRunner() {
-  jest.unstable_mockModule(require.resolve('../gather/driver/environment.js'), () => ({
+  td.replaceEsm(require.resolve('../gather/driver/environment.js'), {
     getBenchmarkIndex: () => Promise.resolve(150),
     getBrowserVersion: async () => ({userAgent: 'Chrome', milestone: 80}),
     getEnvironmentWarnings: () => [],
-  }));
-  jest.mock(require.resolve('../gather/gatherers/stacks.js'),
-    () => ({collectStacks: () => Promise.resolve([])}));
-  jest.mock(require.resolve('../gather/gatherers/installability-errors.js'), () => ({
+  });
+  td.replaceEsm(require.resolve('../gather/gatherers/stacks.js'), undefined, {
+    collectStacks: () => Promise.resolve([]),
+  });
+  td.replaceEsm(require.resolve('../gather/gatherers/installability-errors.js'), undefined, {
     getInstallabilityErrors: async () => ({errors: []}),
-  }));
-  jest.mock(require.resolve('../gather/gatherers/web-app-manifest.js'), () => ({
+  });
+  td.replaceEsm(require.resolve('../gather/gatherers/web-app-manifest.js'), undefined, {
     getWebAppManifest: async () => null,
-  }));
-  jest.unstable_mockModule(require.resolve('../lib/emulation.js'), () => ({
-    emulate: jest.fn(),
-    throttle: jest.fn(),
-    clearThrottling: jest.fn(),
-  }));
-  jest.unstable_mockModule(require.resolve('../gather/driver/prepare.js'), () => ({
-    prepareTargetForNavigationMode: jest.fn(),
-    prepareTargetForIndividualNavigation: jest.fn().mockResolvedValue({warnings: []}),
-  }));
-  jest.unstable_mockModule(require.resolve('../gather/driver/storage.js'), () => ({
-    clearDataForOrigin: jest.fn(),
-    cleanBrowserCaches: jest.fn(),
-    getImportantStorageWarning: jest.fn(),
-  }));
-  jest.unstable_mockModule(require.resolve('../gather/driver/navigation.js'), () => ({
-    gotoURL: jest.fn().mockResolvedValue({
+  });
+  td.replaceEsm(require.resolve('../lib/emulation.js'), {
+    emulate: jestMock.fn(),
+    throttle: jestMock.fn(),
+    clearThrottling: jestMock.fn(),
+  });
+  td.replaceEsm(require.resolve('../gather/driver/prepare.js'), {
+    prepareTargetForNavigationMode: jestMock.fn(),
+    prepareTargetForIndividualNavigation: jestMock.fn().mockResolvedValue({warnings: []}),
+  });
+  td.replaceEsm(require.resolve('../gather/driver/storage.js'), {
+    clearDataForOrigin: jestMock.fn(),
+    cleanBrowserCaches: jestMock.fn(),
+    getImportantStorageWarning: jestMock.fn(),
+  });
+  td.replaceEsm(require.resolve('../gather/driver/navigation.js'), {
+    gotoURL: jestMock.fn().mockResolvedValue({
       mainDocumentUrl: 'http://example.com',
       warnings: [],
     }),
-  }));
+  });
 }
 
 /**
- * Same as jest.fn(), but uses `any` instead of `unknown`.
+ * Same as jestMock.fn(), but uses `any` instead of `unknown`.
  */
 const fnAny = () => {
-  return /** @type {jest.Mock<any, any>} */ (jest.fn());
+  return /** @type {Mock<any, any>} */ (jestMock.fn());
 };
 
 /**
@@ -269,26 +272,44 @@ function getURLArtifactFromDevtoolsLog(devtoolsLog) {
 }
 
 /**
- * Same as jest.requireMock(), but:
- * 1) returns a Mock record instead of `unknown`
- * 2) uses `import` instead of `require`
- * Use only for modules that were mocked with unstable_mockModule.
- *
+ * Use to import a module in tests with Mock types.
+ * Asserts that the module is actually a mock.
  * Resolves module path relative to importMeta.url.
  *
  * @param {string} modulePath
  * @param {ImportMeta} importMeta
- * @return {Promise<Record<string, jest.Mock>>}
+ * @return {Promise<Record<string, Mock<any, any>>>}
  */
-const importMock = async (modulePath, importMeta) => {
+async function importMock(modulePath, importMeta) {
   const dir = path.dirname(url.fileURLToPath(importMeta.url));
   modulePath = path.resolve(dir, modulePath);
   const mock = await import(modulePath);
-  if (!mock[Object.keys(mock)[0]].mock) throw new Error(`${modulePath} was not mocked!`);
+  if (!Object.keys(mock).some(key => mock[key]?.mock)) {
+    throw new Error(`${modulePath} was not mocked!`);
+  }
   return mock;
-};
+}
+
+/**
+ * Same as importMock, but uses require instead to avoid
+ * an unnecessary `.default` or Promise return value.
+ *
+ * @param {string} modulePath
+ * @param {ImportMeta} importMeta
+ * @return {Record<string, Mock<any, any>>}
+ */
+function requireMock(modulePath, importMeta) {
+  const dir = path.dirname(url.fileURLToPath(importMeta.url));
+  modulePath = path.resolve(dir, modulePath);
+  const mock = require(modulePath);
+  if (!Object.keys(mock).some(key => mock[key]?.mock)) {
+    throw new Error(`${modulePath} was not mocked!`);
+  }
+  return mock;
+}
 
 export {
+  timers,
   getProtoRoundTrip,
   loadSourceMapFixture,
   loadSourceMapAndUsageFixture,
@@ -302,4 +323,5 @@ export {
   createScript,
   getURLArtifactFromDevtoolsLog,
   importMock,
+  requireMock,
 };

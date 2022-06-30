@@ -73,7 +73,6 @@ jobs:
         name: Smokehouse (ubuntu; chrome ${{ matrix.chrome-channel }})
         path: .tmp/smokehouse-ci-failures/
 
-  # Only run smoke tests for windows against stable chrome.
   smoke-windows:
     strategy:
       matrix:
@@ -91,6 +90,13 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: 14.x
+
+    - name: Define ToT chrome path
+      run: echo "CHROME_PATH=%GITHUB_WORKSPACE%\chrome-win\chrome" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+
+    # Chrome Stable is already installed by default.
+    - name: Install Chrome ToT
+      run: bash %GITHUB_WORKSPACE%\lighthouse\lighthouse-core\scripts\download-chrome.sh
 
     - run: yarn install --frozen-lockfile --network-timeout 1000000
     - run: yarn build-report

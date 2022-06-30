@@ -4,6 +4,11 @@
   "version": "9.5.0",
   "description": "Automated auditing, performance metrics, and best practices for the web.",
   "main": "./lighthouse-core/index.js",
+  "exports": {
+    "import": "./lighthouse-core/index.js",
+    "require": "./lighthouse-core/index.cjs",
+    "*": "./*"
+  },
   "bin": {
     "lighthouse": "./lighthouse-cli/index.js",
     "chrome-debug": "./lighthouse-core/scripts/manual-chrome-launcher.js",

@@ -15,6 +15,7 @@
     "root.js",
     "lighthouse-cli/**/*.js",
     "lighthouse-core/**/*.js",
+    "lighthouse-core/index.cjs",
     "lighthouse-core/util-commonjs.cjs",
     "clients/**/*.js",
     "build/**/*.js",

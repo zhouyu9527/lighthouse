@@ -11,8 +11,9 @@ import * as assetSaver from '../../lib/asset-saver.js';
 import {Metrics} from '../../lib/traces/pwmetrics-events.js';
 import {LighthouseError} from '../../lib/lh-error.js';
 import {Audit} from '../../audits/audit.js';
-import {LH_ROOT, readJson} from '../../../root.js';
+import {LH_ROOT} from '../../../root.js';
 import {getModuleDirectory} from '../../../esm-utils.mjs';
+import {readJson} from '../test-utils.js';
 
 const traceEvents = readJson('../fixtures/traces/progressive-app.json', import.meta);
 const dbwTrace = readJson('../results/artifacts/defaultPass.trace.json', import.meta);

@@ -6,9 +6,9 @@
 
 import {strict as assert} from 'assert';
 
-import {readJson} from '../../../root.js';
 import ThemedOmniboxAudit from '../../audits/themed-omnibox.js';
 import {parseManifest} from '../../lib/manifest-parser.js';
+import {readJson} from '../test-utils.js';
 
 const manifest = readJson('../fixtures/manifest.json', import.meta);
 

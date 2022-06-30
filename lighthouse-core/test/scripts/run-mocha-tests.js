@@ -95,6 +95,7 @@ const testsToIsolate = new Set([
   // ?
   'clients/test/lightrider/lightrider-entry-test.js', // Runner overrides.
   'flow-report/test/flow-report-pptr-test.ts',
+  'lighthouse-cli/test/cli/run-test.js',
   'lighthouse-core/test/config/config-test.js',
   'lighthouse-core/test/fraggle-rock/config/config-test.js',
   'lighthouse-core/test/lib/emulation-test.js',

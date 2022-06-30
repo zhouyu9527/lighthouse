@@ -6,31 +6,13 @@
 'use strict';
 
 import fs from 'fs';
-import path from 'path';
 import {getModuleDirectory} from './esm-utils.mjs';
 
 const LH_ROOT = getModuleDirectory(import.meta);
 const pkg = JSON.parse(fs.readFileSync(`${LH_ROOT}/package.json`, 'utf-8'));
 const lighthouseVersion = pkg.version;
 
-/**
- * Return parsed json object.
- * Resolves path relative to importMeta.url (if provided) or LH_ROOT (if not provided).
- *
- * Note: Do not use this in lighthouse-core/ outside tests or scripts, as it
- * will not be inlined when bundled. Instead, use `fs.readFileSync`.
- *
- * @param {string} filePath Can be an absolute or relative path.
- * @param {ImportMeta=} importMeta
- */
-function readJson(filePath, importMeta) {
-  const dir = importMeta ? getModuleDirectory(importMeta) : LH_ROOT;
-  filePath = path.resolve(dir, filePath);
-  return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-}
-
 export {
   LH_ROOT,
   lighthouseVersion,
-  readJson,
 };

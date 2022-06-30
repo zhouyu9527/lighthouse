@@ -429,6 +429,7 @@ const defaultConfig = {
     'seo/plugins',
     'seo/canonical',
     'seo/manual/structured-data',
+    'work-during-interaction',
   ],
   groups: {
     'metrics': {
@@ -570,6 +571,7 @@ const defaultConfig = {
         {id: 'viewport', weight: 0},
         {id: 'no-unload-listeners', weight: 0},
         {id: 'uses-responsive-images-snapshot', weight: 0},
+        {id: 'work-during-interaction', weight: 0},
 
         // Budget audits.
         {id: 'performance-budget', weight: 0, group: 'budgets'},

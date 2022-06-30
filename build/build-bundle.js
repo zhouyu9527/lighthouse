@@ -157,8 +157,6 @@ async function buildBundle(entryPath, distPath, opts = {minify: true}) {
           // and uses the output name as the url. Instead, do a simpler conversion and use the
           // module path.
           'import.meta': (id) => `{url: '${path.relative(LH_ROOT, id)}'}`,
-          // See esm-utils.js
-          'isBundled = false': 'isBundled = true',
         },
       }),
       rollupPlugins.alias({

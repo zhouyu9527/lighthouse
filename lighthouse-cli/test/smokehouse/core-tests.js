@@ -103,7 +103,8 @@ const smokeTests = [
   perfFrameMetrics,
   perfPreload,
   perfTraceElements,
-  pubads,
+  // TODO(esmodules): enable when pubads is bundled again
+  // pubads,
   pwaAirhorner,
   pwaChromestatus,
   pwaSvgomg,

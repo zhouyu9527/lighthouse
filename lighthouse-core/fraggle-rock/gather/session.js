@@ -87,10 +87,10 @@ class ProtocolSession extends CrdpEventEmitter {
     const timeoutPromise = new Promise((resolve, reject) => {
       if (timeoutMs === Infinity) return;
 
-      const error = new LighthouseError(LighthouseError.errors.PROTOCOL_TIMEOUT, {
+      // eslint-disable-next-line max-len
+      timeout = setTimeout(reject, timeoutMs, new LighthouseError(LighthouseError.errors.PROTOCOL_TIMEOUT, {
         protocolMethod: method,
-      });
-      timeout = setTimeout(reject, timeoutMs, error);
+      }));
     });
 
     const resultPromise = this._cdpSession.send(method, ...params);

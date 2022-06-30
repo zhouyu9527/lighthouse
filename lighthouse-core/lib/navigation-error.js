@@ -44,9 +44,8 @@ function getNetworkError(mainRecord) {
     ) {
       return new LighthouseError(LighthouseError.errors.DNS_FAILURE);
     } else {
-      return new LighthouseError(LighthouseError.errors.FAILED_DOCUMENT_REQUEST, {
-        errorDetails: netErr,
-      });
+      return new LighthouseError(
+        LighthouseError.errors.FAILED_DOCUMENT_REQUEST, {errorDetails: netErr});
     }
   } else if (mainRecord.hasErrorStatusCode()) {
     return new LighthouseError(LighthouseError.errors.ERRORED_DOCUMENT_REQUEST, {

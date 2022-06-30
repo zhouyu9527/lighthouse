@@ -294,9 +294,8 @@ describe('asset-saver helper', () => {
     it('round trips artifacts with an LighthouseError member', async () => {
       // Use an LighthouseError that has an ICU replacement.
       const protocolMethod = 'Page.getFastness';
-      const lhError = new LighthouseError(LighthouseError.errors.PROTOCOL_TIMEOUT, {
-        protocolMethod,
-      });
+      const lhError = new LighthouseError(
+        LighthouseError.errors.PROTOCOL_TIMEOUT, {protocolMethod});
 
       const artifacts = {
         traces: {},

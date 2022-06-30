@@ -208,9 +208,8 @@ describe('Runner', () => {
         afterPass(passContext) {
           const warning = str_(i18n.UIStrings.displayValueByteSavings, {wastedBytes: 2222});
           passContext.LighthouseRunWarnings.push(warning);
-          throw new LighthouseError(LighthouseError.errors.UNSUPPORTED_OLD_CHROME, {
-            featureName: 'VRML',
-          });
+          throw new LighthouseError(
+            LighthouseError.errors.UNSUPPORTED_OLD_CHROME, {featureName: 'VRML'});
         }
       }
       const gatherConfig = await Config.fromJson({

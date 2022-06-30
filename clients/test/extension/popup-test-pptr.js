@@ -10,7 +10,9 @@ const puppeteer = require('puppeteer-core');
 const {getChromePath} = require('chrome-launcher');
 const {DEFAULT_CATEGORIES, STORAGE_KEYS} =
   require('../../extension/scripts/settings-controller.js');
-const {LH_ROOT} = require('../../../root.js');
+// const {LH_ROOT} = require('../../../root.js');
+// TODO(esmodules): remove when shared/ is esm
+const LH_ROOT = __dirname + '/../../..';
 
 const lighthouseExtensionPath = path.resolve(LH_ROOT, 'dist/extension-chrome');
 

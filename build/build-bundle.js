@@ -178,6 +178,11 @@ async function buildBundle(entryPath, distPath, opts = {minify: true}) {
           export const fileURLToPath = url => url;
           export default {URL, fileURLToPath};
         `,
+        'module': `
+          export const createRequire = () => {
+            throw new Error('createRequire is not supported in bundled Lighthouse');
+          };
+        `,
       }),
       rollupPlugins.json(),
       rollupPlugins.inlineFs({verbose: false}),

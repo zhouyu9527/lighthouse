@@ -10,7 +10,7 @@ import path from 'path';
 import {getModuleDirectory} from './esm-utils.mjs';
 
 const LH_ROOT = getModuleDirectory(import.meta);
-const pkg = readJson('package.json');
+const pkg = JSON.parse(fs.readFileSync(`${LH_ROOT}/package.json`, 'utf-8'));
 const lighthouseVersion = pkg.version;
 
 /**

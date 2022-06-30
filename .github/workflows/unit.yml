@@ -60,7 +60,7 @@ jobs:
     - run: sudo apt-get install xvfb
 
     # TODO undo
-    - name: yarn unit-core
+    - name: yarn unit
       if: ${{ matrix.node != env.LATEST_NODE }}
       run: xvfb-run --auto-servernum yarn unit:ci
 
@@ -68,7 +68,7 @@ jobs:
     - name: yarn unit:cicoverage
       if: ${{ matrix.node == env.LATEST_NODE }}
       run: |
-        xvfb-run --auto-servernum yarn unit-core
+        xvfb-run --auto-servernum yarn unit:cicoverage
         yarn c8 report --reporter text-lcov > unit-coverage.lcov
     - name: Upload test coverage to Codecov
       if: ${{ matrix.node == env.LATEST_NODE }}

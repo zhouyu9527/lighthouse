@@ -6,10 +6,12 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-const gulp = require('gulp');
-const connect = require('gulp-connect');
-const lighthouse = require('lighthouse');
-const chromeLauncher = require('chrome-launcher');
+import gulp from 'gulp';
+
+import connect from 'gulp-connect';
+import lighthouse from 'lighthouse';
+import chromeLauncher from 'chrome-launcher';
+
 const PORT = 8080;
 
 /**

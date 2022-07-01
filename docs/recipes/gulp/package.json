@@ -1,12 +1,13 @@
 {
   "name": "gulp-lighthouse-recipe",
   "private": true,
+  "type": "module",
   "scripts": {
     "start": "gulp"
   },
   "devDependencies": {
     "gulp": "^3.9.1",
     "gulp-connect": "^5.0.0",
-    "lighthouse": "^9.5.0"
+    "lighthouse": "file:../../../dist/lighthouse.tgz"
   }
 }

@@ -428,8 +428,7 @@ async function resolveAuditsToDefns(audits, configDir) {
   }
 
   const coreList = Runner.getAuditList();
-  const auditDefns = [];
-  for (const auditJson of audits) {
+  const auditDefnsPromises = audits.map(async (auditJson) => {
     const auditDefn = expandAuditShorthand(auditJson);
     let implementation;
     if ('implementation' in auditDefn) {
@@ -438,12 +437,13 @@ async function resolveAuditsToDefns(audits, configDir) {
       implementation = await requireAudit(auditDefn.path, coreList, configDir);
     }
 
-    auditDefns.push({
+    return {
       implementation,
       path: auditDefn.path,
       options: auditDefn.options || {},
-    });
-  }
+    };
+  });
+  const auditDefns = await Promise.all(auditDefnsPromises);
 
   const mergedAuditDefns = mergeOptionsOfItems(auditDefns);
   mergedAuditDefns.forEach(audit => validation.assertValidAudit(audit));
@@ -506,7 +506,7 @@ function resolveModulePath(moduleIdentifier, configDir, category) {
 
   const errorString = 'Unable to locate ' + (category ? `${category}: ` : '') +
     `\`${moduleIdentifier}\`.
-     Tried to require() from these locations:
+     Tried to resolve the module from these locations:
        ${getModuleDirectory(import.meta)}
        ${cwdPath}`;
 

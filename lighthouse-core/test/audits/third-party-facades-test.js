@@ -6,7 +6,7 @@
 
 import ThirdPartyFacades from '../../audits/third-party-facades.js';
 import {networkRecordsToDevtoolsLog} from '../network-records-to-devtools-log.js';
-import createTestTrace from '../create-test-trace.js';
+import {createTestTrace} from '../create-test-trace.js';
 import {getURLArtifactFromDevtoolsLog, readJson} from '../test-utils.js';
 
 const pwaTrace = readJson('../fixtures/traces/progressive-app-m60.json', import.meta);

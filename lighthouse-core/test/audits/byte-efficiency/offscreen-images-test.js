@@ -7,7 +7,7 @@
 import {strict as assert} from 'assert';
 
 import UnusedImages from '../../../audits/byte-efficiency/offscreen-images.js';
-import createTestTrace from '../../create-test-trace.js';
+import {createTestTrace} from '../../create-test-trace.js';
 import {networkRecordsToDevtoolsLog} from '../../network-records-to-devtools-log.js';
 
 function generateRecord({

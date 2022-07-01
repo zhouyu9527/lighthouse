@@ -5,7 +5,7 @@
  */
 
 import LongTasks from '../../audits/long-tasks.js';
-import createTestTrace from '../create-test-trace.js';
+import {createTestTrace} from '../create-test-trace.js';
 import {networkRecordsToDevtoolsLog} from '../network-records-to-devtools-log.js';
 
 const BASE_TS = 12345e3;

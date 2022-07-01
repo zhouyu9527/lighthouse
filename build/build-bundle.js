@@ -179,7 +179,11 @@ async function buildBundle(entryPath, distPath, opts = {minify: true}) {
         `,
         'module': `
           export const createRequire = () => {
-            throw new Error('createRequire is not supported in bundled Lighthouse');
+            return {
+              resolve() {
+                throw new Error('createRequire.resolve is not supported in bundled Lighthouse');
+              },
+            };
           };
         `,
       }),

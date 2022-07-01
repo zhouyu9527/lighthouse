@@ -24,7 +24,11 @@ async function main() {
           'export function runLighthouse() { throw new Error("not supported"); }',
         'module': `
           export const createRequire = () => {
-            throw new Error('createRequire is not supported in bundled Lighthouse');
+            return {
+              resolve() {
+                throw new Error('createRequire.resolve is not supported in bundled Lighthouse');
+              },
+            };
           };
         `,
       }),

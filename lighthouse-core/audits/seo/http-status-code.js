@@ -6,10 +6,11 @@
 'use strict';
 
 import {Audit} from '../audit.js';
-const HTTP_UNSUCCESSFUL_CODE_LOW = 400;
-const HTTP_UNSUCCESSFUL_CODE_HIGH = 599;
 import * as i18n from '../../lib/i18n/i18n.js';
 import MainResource from '../../computed/main-resource.js';
+
+const HTTP_UNSUCCESSFUL_CODE_LOW = 400;
+const HTTP_UNSUCCESSFUL_CODE_HIGH = 599;
 
 const UIStrings = {
   /** Title of a Lighthouse audit that provides detail on the HTTP status code a page responds with. This descriptive title is shown when the page has responded with a valid HTTP status code. */

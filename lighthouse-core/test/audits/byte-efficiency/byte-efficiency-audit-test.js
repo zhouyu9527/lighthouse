@@ -6,8 +6,7 @@
 
 import {strict as assert} from 'assert';
 
-import {ByteEfficiencyAudit as ByteEfficiencyAudit_}
-  from '../../../audits/byte-efficiency/byte-efficiency-audit.js';
+import {ByteEfficiencyAudit as ByteEfficiencyAudit_} from '../../../audits/byte-efficiency/byte-efficiency-audit.js';
 import {NetworkNode} from '../../../lib/dependency-graph/network-node.js';
 import {CPUNode} from '../../../lib/dependency-graph/cpu-node.js';
 import {Simulator} from '../../../lib/dependency-graph/simulator/simulator.js';

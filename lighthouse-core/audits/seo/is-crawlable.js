@@ -7,18 +7,18 @@
 
 import {Audit} from '../audit.js';
 
-// TODO(esmodules): cast can be removed when this switches to import.
 import robotsParser from 'robots-parser'; // eslint-disable-line max-len
 
 import URL from '../../lib/url-shim.js';
 import MainResource from '../../computed/main-resource.js';
+import * as i18n from '../../lib/i18n/i18n.js';
+
 const BLOCKLIST = new Set([
   'noindex',
   'none',
 ]);
 const ROBOTS_HEADER = 'x-robots-tag';
 const UNAVAILABLE_AFTER = 'unavailable_after';
-import * as i18n from '../../lib/i18n/i18n.js';
 
 const UIStrings = {
   /** Title of a Lighthouse audit that provides detail on if search-engine crawlers are blocked from indexing the page. This title is shown when the page is not blocked from indexing and can be crawled. */

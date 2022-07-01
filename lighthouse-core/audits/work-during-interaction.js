@@ -14,8 +14,7 @@ import {MainThreadTasks} from '../lib/tracehouse/main-thread-tasks.js';
 import {taskGroups} from '../lib/tracehouse/task-groups.js';
 import {TraceProcessor} from '../lib/tracehouse/trace-processor.js';
 import {getExecutionTimingsByURL} from '../lib/tracehouse/task-summary.js';
-import ExperimentalInteractionToNextPaint
-  from './metrics/experimental-interaction-to-next-paint.js';
+import ExperimentalInteractionToNextPaint from './metrics/experimental-interaction-to-next-paint.js';
 import {LighthouseError} from '../lib/lh-error.js';
 
 /** @typedef {import('../computed/metrics/responsiveness.js').EventTimingEvent} EventTimingEvent */

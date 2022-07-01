@@ -337,7 +337,7 @@ describe('.resolveSettings', () => {
   });
 });
 
-describe('.await resolveGathererToDefn', () => {
+describe('.resolveGathererToDefn', () => {
   const coreList = Runner.getGathererList();
 
   it('should expand gatherer path short-hand', async () => {

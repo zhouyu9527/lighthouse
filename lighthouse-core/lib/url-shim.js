@@ -9,7 +9,7 @@
  * URL shim so we keep our code DRY
  */
 
-import {Util} from '../util-commonjs.cjs';
+import {Util} from '../util.cjs';
 
 import {LighthouseError} from '../lib/lh-error.js';
 

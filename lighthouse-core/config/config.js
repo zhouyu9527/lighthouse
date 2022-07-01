@@ -540,13 +540,11 @@ class Config {
     log.time(status, 'verbose');
 
     const coreList = Runner.getGathererList();
-
-    const fullPasses = [];
-    for (const pass of passes) {
-      const gathererDefns = [];
-      for (const gatherer of pass.gatherers) {
-        gathererDefns.push(await resolveGathererToDefn(gatherer, coreList, configDir));
-      }
+    const fullPassesPromises = passes.map(async (pass) => {
+      const gathererDefns = await Promise.all(
+        pass.gatherers
+          .map(gatherer => resolveGathererToDefn(gatherer, coreList, configDir))
+      );
 
       // De-dupe gatherers by artifact name because artifact IDs must be unique at runtime.
       const uniqueDefns = Array.from(
@@ -554,8 +552,9 @@ class Config {
       );
       uniqueDefns.forEach(gatherer => assertValidGatherer(gatherer.instance, gatherer.path));
 
-      fullPasses.push(Object.assign(pass, {gatherers: uniqueDefns}));
-    }
+      return Object.assign(pass, {gatherers: uniqueDefns});
+    });
+    const fullPasses = await Promise.all(fullPassesPromises);
 
     log.timeEnd(status);
     return fullPasses;

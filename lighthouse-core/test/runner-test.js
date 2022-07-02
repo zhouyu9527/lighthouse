@@ -21,7 +21,7 @@ import * as assetSaver from '../lib/asset-saver.js';
 import {LighthouseError} from '../lib/lh-error.js';
 import * as i18n from '../lib/i18n/i18n.js';
 import {importMock, makeMocksForGatherRunner} from './test-utils.js';
-import {getModuleDirectory} from '../../esm-utils.mjs';
+import {getModuleDirectory} from '../../esm-utils.js';
 
 const moduleDir = getModuleDirectory(import.meta);
 

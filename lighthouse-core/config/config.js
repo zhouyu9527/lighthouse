@@ -22,7 +22,7 @@ import {
   deepClone,
   deepCloneConfigJson,
 } from './config-helpers.js';
-import {getModuleDirectory} from '../../esm-utils.mjs';
+import {getModuleDirectory} from '../../esm-utils.js';
 
 const defaultConfigPath = './default-config.js';
 

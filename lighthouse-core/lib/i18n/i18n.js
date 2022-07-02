@@ -14,7 +14,7 @@ import {getAvailableLocales} from '../../../shared/localization/format.js';
 import log from 'lighthouse-logger';
 import {LH_ROOT} from '../../../root.js';
 import {isIcuMessage, formatMessage, DEFAULT_LOCALE} from '../../../shared/localization/format.js';
-import {getModulePath} from '../../../esm-utils.mjs';
+import {getModulePath} from '../../../esm-utils.js';
 
 const UIStrings = {
   /** Used to show the duration in milliseconds that something lasted. The `{timeInMs}` placeholder will be replaced with the time duration, shown in milliseconds (e.g. 63 ms) */

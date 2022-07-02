@@ -6,7 +6,7 @@
 'use strict';
 
 import fs from 'fs';
-import {getModuleDirectory} from './esm-utils.mjs';
+import {getModuleDirectory} from './esm-utils.js';
 
 const LH_ROOT = getModuleDirectory(import.meta);
 const pkg = JSON.parse(fs.readFileSync(`${LH_ROOT}/package.json`, 'utf-8'));
